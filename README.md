@@ -3,7 +3,7 @@
 ## CERTIFICATIONS & TECHNICAL SKILLS
 
 ### Certifications:
-- ctuarial Probability Exam (P) – Passed November 2023
+- Actuarial Probability Exam (P) – Passed November 2023
 - Actuarial Financial Mathematics Exam (FM) – Passed April 2024
 - Actuarial Statistics for Risk Modeling Exam (SRM) – Passed January 2025
 
