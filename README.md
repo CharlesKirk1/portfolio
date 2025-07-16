@@ -1,5 +1,7 @@
 # Data Scientist, Mathematician
 
+## Certifications and Technical Skills
+
 ### Certifications:
 - Actuarial Probability Exam (P) – Passed November 2023
 - Actuarial Financial Mathematics Exam (FM) – Passed April 2024
