@@ -15,7 +15,8 @@
 ## EDUCATION 
 Juniata College Master of Data Science
 - Graduated May 2025
-- GPA: 3.83 
+- GPA: 3.83
+
 Bachelor of Science in Mathematics
 - Graduated May 2023
 - GPA: 3.60 (Cum Laude)
