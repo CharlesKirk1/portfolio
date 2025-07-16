@@ -23,7 +23,7 @@ Made use of Microsoft Excel, Microsoft SQL Server and IBM RPG IV.
 Analyzed and resolved a significant payment transmission error, correcting an $800,000 discrepancy and enhancing future transaction accuracy.
 Automated reporting processes for Ohio operations, reducing manual input and errors.
 Conducted data accuracy checks for electronic invoices, improving operational efficiency.
-Mathematics Research Assistant (Research Experience for Undergraduates) Ursinus College, Collegeville, PA | June 2022 - July 2022
+Mathematics Research Assistant (Research Experience for Undergraduates) Ursinus College, Collegeville, PA  June 2022 - July 2022
 Collaborated on the development of a novel distance metric for time series data, enhancing analytical capabilities.
 Presented research findings at the Ursinus College Summer Fellows symposium and showcased at the national MAA MathFest conference.
 Peer Tutor Juniata College, Huntingdon, PA  September 2020 - May 2023
