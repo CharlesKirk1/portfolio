@@ -12,14 +12,6 @@
 - Programming Languages: Python (Intermediate), Java (Intermediate), Microsoft SQL Server (Intermediate), IBM RPG IV (Beginner)
 - Data Visualization and Analytics Tools: RStudio (Intermediate), Tableau (Beginner), Azure Data Studio (Beginner),  Microsoft Excel (Beginner)
 
-## EDUCATION 
-Juniata College Master of Data Science
-- Graduated May 2025
-- GPA: 3.83
-
-Bachelor of Science in Mathematics
-- Graduated May 2023
-- GPA: 3.60 (Cum Laude)
 
 Relevant Coursework: Big Data Techniques, Database Systems, Data Mining, Data Acquisition & Visualization, Statistical Consulting, Probability, Mathematical Modeling, Linear Algebra
 
