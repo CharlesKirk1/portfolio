@@ -1,6 +1,6 @@
 # Data Scientist, Mathematician
 
-## Certifications and Technical Skills
+## CERTIFICATIONS & TECHNICAL SKILLS
 
 ### Certifications:
 - Actuarial Probability Exam (P) – Passed November 2023
