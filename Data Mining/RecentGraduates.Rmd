@@ -1,0 +1,71 @@
+---
+title: "RecentGraduates"
+author: "Charles Kirk"
+date: "2024-09-08"
+output: word_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(tidyverse)
+```
+
+```{r}
+recent_grads <- read_csv("~/Dropbox/Charley/Juniata/Data Science Masters/Data Mining/recent-grads.csv")
+```
+
+```{r}
+recent_grads
+```
+
+```{r}
+recent_grads%>%
+  filter(Total!=Men+Women)%>%
+  select(Total, Men, Women)
+```
+
+
+
+Dataset Narrative
+
+Tentatively I may call the project Recent Graduates. It was suggested that we pick something from our major, but my major is Data Science so I just tried to pick a subject that was somewhat interesting to me. This dataset contains information about recent graduates, including their major, their employment, their gender, and their earnings. This dataset was last updated 7 years ago. According to the "readme" markdown document for the data on data.world, the data was apparently used in a piece by FiveThirtyEight on "the earnings of college majors." The csv I pulled from is for a table with 21 attributes so I plan to eventually create a subset with just 15 of the attributes. For now I'll give variable descriptions for all 21 attributes in the Data Sources section. From this dataset I expect to find that graduates who have jobs that require college degrees are financially better off than graduates who have jobs that do not require a college degree.
+
+Audience
+
+If I wanted to give a presentation on this data, the expected audience would probably be recent graduates or people graduating soon, as I think they'd be the ones most interested in what to expect financially post-graduation. It's also possible that people who have not gone to college could use this data to help inform their decision on whether or not to pursue a college degree, as they can compare, among other things, the number of people who have jobs requiring a college degree to the number of people with jobs that don't have a college degree and the number of people in a given major who have found employment. This data is interesting to me personally because I've been job searching as a graduate for some time now with limited success.
+
+Data Sources
+
+I found this dataset on data.world after clicking on their "education" data topic; from the list of datasets I picked one called "College Majors" and from a group of csvs I picked out the one called "recent-grads.csv." (Full disclosure Dr. Rhodes, I did discover that a copy of the data exists on Kaggle. It technically originates from the Census Bureau though. If you do have a problem with it being accessible on Kaggle just let me know and I can try to pick something else.)
+
+I used the glimpse function in RStudio to create snippets of the table. Because of large value lengths some attributes like Major display less than five values, but I provided a snippet of the head of the data, a snippet of the tail of the data and a random sample of the data to help give a sense of what the dataset looks like, so I figured it wasn't too important.
+```{r}
+recent_grads%>%
+  head()%>%
+  glimpse()
+```
+
+```{r}
+recent_grads%>%
+  tail()%>%
+  glimpse()
+```
+
+```{r}
+recent_grads%>%
+  sample_n(6, TRUE)%>%
+  glimpse()
+```
+
+
+URLs
+
+Note: when you use the Cesus Bureau link for the page where the data was originally pulled a 404 message pops up. But below that message you should see a hyperlink for the American Community Survey (ACS) page which I believe is the survey that was used to collect the data. I also included a link for the College Majors dataset on data.world, and a github link for FiveThirtyEight that was provided on that data.world page.
+
+https://data.world/fivethirtyeight/college-majors
+https://github.com/fivethirtyeight/data
+http://www.census.gov/acs/www/data_documentation/pums_data/
+

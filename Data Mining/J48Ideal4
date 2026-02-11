@@ -1,0 +1,96 @@
+=== Run information ===
+
+Scheme:       weka.classifiers.trees.J48 -B -J -C 0.25 -M 5 -output-debug-info
+Relation:     recsub_increased-weka.filters.unsupervised.attribute.Remove-R1-2,13,17-27
+Instances:    317
+Attributes:   13
+              Major_category
+              Total
+              Sample_size
+              Men
+              Women
+              ShareWomen
+              Full_time_year_round
+              Median
+              P25th
+              P75th
+              Non_college_jobs
+              Low_wage_jobs
+              College_jobs_binned
+Test mode:    split 66.0% train, remainder test
+
+=== Classifier model (full training set) ===
+
+J48 pruned tree
+------------------
+
+Total <= 62052.0
+|   Full_time_year_round <= 13651.0: (-152,1.52e+04] (119.0)
+|   Full_time_year_round > 13651.0
+|   |   Low_wage_jobs <= 5751.0: (1.52e+04,3.03e+04] (20.0/4.0)
+|   |   Low_wage_jobs > 5751.0: (-152,1.52e+04] (7.0)
+Total > 62052.0
+|   Women <= 102352.0
+|   |   Median <= 50000.0
+|   |   |   P25th <= 24500.0: (4.55e+04,6.07e+04] (12.0/2.0)
+|   |   |   P25th > 24500.0: (3.03e+04,4.55e+04] (78.0/8.0)
+|   |   Median > 50000.0
+|   |   |   Major_category = Engineering: (4.55e+04,6.07e+04] (20.0)
+|   |   |   Major_category != Engineering: (6.07e+04,7.58e+04] (10.0)
+|   Women > 102352.0
+|   |   Sample_size <= 1436.0: (7.58e+04,9.1e+04] (21.0/1.0)
+|   |   Sample_size > 1436.0
+|   |   |   Major_category = Health: (1.36e+05,1.52e+05] (10.0)
+|   |   |   Major_category != Health
+|   |   |   |   Major_category = Education: (1.06e+05,1.21e+05] (10.0)
+|   |   |   |   Major_category != Education: (1.21e+05,1.36e+05] (10.0)
+
+Number of Leaves  : 	11
+
+Size of the tree : 	21
+
+
+Time taken to build model: 0 seconds
+
+=== Evaluation on test split ===
+
+Time taken to test model on test split: 0 seconds
+
+=== Summary ===
+
+Correctly Classified Instances          99               91.6667 %
+Incorrectly Classified Instances         9                8.3333 %
+Kappa statistic                          0.8935
+Mean absolute error                      0.0294
+Root mean squared error                  0.126 
+Relative absolute error                 17.1165 %
+Root relative squared error             42.3074 %
+Total Number of Instances              108     
+
+=== Detailed Accuracy By Class ===
+
+                 TP Rate  FP Rate  Precision  Recall   F-Measure  MCC      ROC Area  PRC Area  Class
+                 1.000    0.014    0.975      1.000    0.987      0.980    0.993     0.975     (-152,1.52e+04]
+                 0.500    0.000    1.000      0.500    0.667      0.697    0.662     0.528     (1.52e+04,3.03e+04]
+                 1.000    0.080    0.500      1.000    0.667      0.678    0.965     0.538     (4.55e+04,6.07e+04]
+                 0.000    0.000    ?          0.000    ?          ?        0.975     0.545     (6.07e+04,7.58e+04]
+                 1.000    0.000    1.000      1.000    1.000      1.000    1.000     1.000     (1.36e+05,1.52e+05]
+                 1.000    0.000    1.000      1.000    1.000      1.000    1.000     1.000     (3.03e+04,4.55e+04]
+                 1.000    0.000    1.000      1.000    1.000      1.000    1.000     1.000     (7.58e+04,9.1e+04]
+                 1.000    0.000    1.000      1.000    1.000      1.000    1.000     1.000     (1.06e+05,1.21e+05]
+                 1.000    0.000    1.000      1.000    1.000      1.000    1.000     1.000     (1.21e+05,1.36e+05]
+Weighted Avg.    0.917    0.011    ?          0.917    ?          ?        0.975     0.905     
+
+=== Confusion Matrix ===
+
+  a  b  c  d  e  f  g  h  i   <-- classified as
+ 39  0  0  0  0  0  0  0  0 |  a = (-152,1.52e+04]
+  1  3  2  0  0  0  0  0  0 |  b = (1.52e+04,3.03e+04]
+  0  0  8  0  0  0  0  0  0 |  c = (4.55e+04,6.07e+04]
+  0  0  6  0  0  0  0  0  0 |  d = (6.07e+04,7.58e+04]
+  0  0  0  0  4  0  0  0  0 |  e = (1.36e+05,1.52e+05]
+  0  0  0  0  0 26  0  0  0 |  f = (3.03e+04,4.55e+04]
+  0  0  0  0  0  0 10  0  0 |  g = (7.58e+04,9.1e+04]
+  0  0  0  0  0  0  0  4  0 |  h = (1.06e+05,1.21e+05]
+  0  0  0  0  0  0  0  0  5 |  i = (1.21e+05,1.36e+05]
+

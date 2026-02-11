@@ -1,0 +1,488 @@
+=== Run information ===
+
+Scheme:       weka.classifiers.functions.MultilayerPerceptron -L 0.1 -M 0.2 -N 500 -V 0 -S 0 -E 20 -H 9 -G -R
+Relation:     recsub_binned4-weka.filters.unsupervised.attribute.Remove-R1-2,13,17-27
+Instances:    172
+Attributes:   13
+              Major_category
+              Total
+              Sample_size
+              Men
+              Women
+              ShareWomen
+              Full_time_year_round
+              Median
+              P25th
+              P75th
+              Non_college_jobs
+              Low_wage_jobs
+              College_jobs_binned
+Test mode:    10-fold cross-validation
+
+=== Classifier model (full training set) ===
+
+Sigmoid Node 0
+    Inputs    Weights
+    Threshold    -0.5177564313683739
+    Node 10    -1.250176745986662
+    Node 11    2.3495053652969173
+    Node 12    -0.8610381292955958
+    Node 13    -3.348715590599157
+    Node 14    -4.336544779979013
+    Node 15    0.9068890055012645
+    Node 16    3.0123472037716055
+    Node 17    -10.061622089110385
+    Node 18    7.63843664780557
+Sigmoid Node 1
+    Inputs    Weights
+    Threshold    -0.5326529597773443
+    Node 10    -3.0283664796082106
+    Node 11    -5.332952938145406
+    Node 12    0.8983772374204159
+    Node 13    -0.007735874006096935
+    Node 14    6.284858897926217
+    Node 15    0.4171569757515086
+    Node 16    -4.916419012116135
+    Node 17    4.340193920078238
+    Node 18    -5.46118659407574
+Sigmoid Node 2
+    Inputs    Weights
+    Threshold    -0.9569847789138742
+    Node 10    0.49188112164850245
+    Node 11    -0.9538099398250723
+    Node 12    -2.190887101691569
+    Node 13    3.1046145696282306
+    Node 14    -4.696117447902176
+    Node 15    2.9465880352567138
+    Node 16    1.4849286262681274
+    Node 17    -2.846961876357563
+    Node 18    -2.8450748792566705
+Sigmoid Node 3
+    Inputs    Weights
+    Threshold    -1.9928325427270324
+    Node 10    -1.1210805230803742
+    Node 11    1.1539194545777975
+    Node 12    1.3361027073739442
+    Node 13    -0.7130168425585969
+    Node 14    -1.7994989963090435
+    Node 15    -0.9878249012626227
+    Node 16    -0.8245017839536459
+    Node 17    1.4207352755041172
+    Node 18    -3.323042204388856
+Sigmoid Node 4
+    Inputs    Weights
+    Threshold    -0.3572937961596908
+    Node 10    -3.357794206000241
+    Node 11    1.7750581287929748
+    Node 12    -4.145677636010412
+    Node 13    2.0323085891777946
+    Node 14    -3.3761009231725003
+    Node 15    -0.5227071496164939
+    Node 16    -1.8068981426924997
+    Node 17    3.0666653835746573
+    Node 18    -0.05516779188859025
+Sigmoid Node 5
+    Inputs    Weights
+    Threshold    -1.995214561686183
+    Node 10    1.9448790817268122
+    Node 11    -0.8072531828337979
+    Node 12    0.6628995383737223
+    Node 13    -2.448284099262178
+    Node 14    -4.426121528512598
+    Node 15    -2.066875773738014
+    Node 16    2.0415985061269364
+    Node 17    1.7163620211049142
+    Node 18    -2.7392023100947283
+Sigmoid Node 6
+    Inputs    Weights
+    Threshold    -1.6928475146401991
+    Node 10    -0.053763041858290506
+    Node 11    -1.0126567683920162
+    Node 12    -2.2053126772853773
+    Node 13    -1.6048915967771633
+    Node 14    1.2023761937182853
+    Node 15    -1.753232823610518
+    Node 16    -1.806256593543766
+    Node 17    0.06612474172593276
+    Node 18    2.7668206084053164
+Sigmoid Node 7
+    Inputs    Weights
+    Threshold    -1.404083976016848
+    Node 10    -0.3561147291654813
+    Node 11    -0.8927183526586597
+    Node 12    -0.4955274853617327
+    Node 13    -0.5352933031262179
+    Node 14    -0.6452502662508678
+    Node 15    -1.0360723505083707
+    Node 16    -0.27917199655855235
+    Node 17    -0.15975992878587109
+    Node 18    -1.2596287355911713
+Sigmoid Node 8
+    Inputs    Weights
+    Threshold    -1.9635673439282564
+    Node 10    0.007979526318385657
+    Node 11    -1.6660956940466705
+    Node 12    -2.0527501362564715
+    Node 13    0.9045647218319255
+    Node 14    -1.8194160888960793
+    Node 15    -3.057071441796887
+    Node 16    1.2574741767095137
+    Node 17    1.6901406762992242
+    Node 18    -0.7123479029903853
+Sigmoid Node 9
+    Inputs    Weights
+    Threshold    -1.1843451393898548
+    Node 10    -0.4570918156147913
+    Node 11    -0.7561175285568916
+    Node 12    -0.817109825843084
+    Node 13    -0.8343178903747746
+    Node 14    -0.2557888792464905
+    Node 15    -1.2351342493118518
+    Node 16    -0.8244390611190873
+    Node 17    -0.3280865229735879
+    Node 18    -0.5814363287773155
+Sigmoid Node 10
+    Inputs    Weights
+    Threshold    0.0532431102607599
+    Attrib Major_category=Engineering    -0.5092165319124264
+    Attrib Major_category=Business    0.4666318344751212
+    Attrib Major_category=Physical Sciences    -1.1220233762682839
+    Attrib Major_category=Law & Public Policy    -0.5291470032443318
+    Attrib Major_category=Computers & Mathematics    0.9725298914965421
+    Attrib Major_category=Agriculture & Natural Resources    0.6231705724966806
+    Attrib Major_category=Industrial Arts & Consumer Services    0.11520808493278395
+    Attrib Major_category=Arts    0.812542627279595
+    Attrib Major_category=Health    -0.008229926561970986
+    Attrib Major_category=Social Science    0.5225803446852686
+    Attrib Major_category=Biology & Life Science    -1.8722019105973544
+    Attrib Major_category=Education    0.5006780217907407
+    Attrib Major_category=Humanities & Liberal Arts    0.8889743383105928
+    Attrib Major_category=Psychology & Social Work    0.6227322089598165
+    Attrib Major_category=Communications & Journalism    0.317323988910359
+    Attrib Major_category=Interdisciplinary    -1.8166453053017928
+    Attrib Total    0.3055435541131916
+    Attrib Sample_size    0.5046568329572483
+    Attrib Men    -2.4695730342259465
+    Attrib Women    -1.08761631019745
+    Attrib ShareWomen    1.2470360116803596
+    Attrib Full_time_year_round    0.37317482110770456
+    Attrib Median    -1.2323109695479175
+    Attrib P25th    -1.6251890534142737
+    Attrib P75th    -0.2266581469646708
+    Attrib Non_college_jobs    0.767090288357085
+    Attrib Low_wage_jobs    0.4208343238565634
+Sigmoid Node 11
+    Inputs    Weights
+    Threshold    -0.41462242113530223
+    Attrib Major_category=Engineering    0.0389800748795538
+    Attrib Major_category=Business    -0.047356511330694524
+    Attrib Major_category=Physical Sciences    -2.144650750406021
+    Attrib Major_category=Law & Public Policy    -0.3392072819697884
+    Attrib Major_category=Computers & Mathematics    0.35540892912808375
+    Attrib Major_category=Agriculture & Natural Resources    1.8528833794783925
+    Attrib Major_category=Industrial Arts & Consumer Services    0.9469782647971633
+    Attrib Major_category=Arts    2.249377526642807
+    Attrib Major_category=Health    -0.32539859723421916
+    Attrib Major_category=Social Science    0.33080102073530165
+    Attrib Major_category=Biology & Life Science    1.725342218664449
+    Attrib Major_category=Education    0.14257656453112377
+    Attrib Major_category=Humanities & Liberal Arts    0.5030910924977561
+    Attrib Major_category=Psychology & Social Work    -0.8155450228697203
+    Attrib Major_category=Communications & Journalism    -0.0033526990277247424
+    Attrib Major_category=Interdisciplinary    1.191645739823738
+    Attrib Total    -3.4549192674910025
+    Attrib Sample_size    -1.6157225251836365
+    Attrib Men    2.165528488672145
+    Attrib Women    0.021115753363319813
+    Attrib ShareWomen    -0.9100974952209776
+    Attrib Full_time_year_round    -3.3175374574984398
+    Attrib Median    0.5735054949973255
+    Attrib P25th    0.8563428738789728
+    Attrib P75th    0.13305375184922463
+    Attrib Non_college_jobs    -0.8949834263829151
+    Attrib Low_wage_jobs    -1.2283751316855025
+Sigmoid Node 12
+    Inputs    Weights
+    Threshold    0.31574529489024006
+    Attrib Major_category=Engineering    -1.6874947411888994
+    Attrib Major_category=Business    -0.5528419252062986
+    Attrib Major_category=Physical Sciences    0.7629693890104171
+    Attrib Major_category=Law & Public Policy    -0.4341583971656955
+    Attrib Major_category=Computers & Mathematics    1.6309648274557607
+    Attrib Major_category=Agriculture & Natural Resources    -0.5205322602567709
+    Attrib Major_category=Industrial Arts & Consumer Services    0.18315112684226229
+    Attrib Major_category=Arts    1.1512462036017683
+    Attrib Major_category=Health    -2.9419881788486126
+    Attrib Major_category=Social Science    0.055019584615735
+    Attrib Major_category=Biology & Life Science    0.06291265005534125
+    Attrib Major_category=Education    -0.5600595645162378
+    Attrib Major_category=Humanities & Liberal Arts    -0.6312732439523197
+    Attrib Major_category=Psychology & Social Work    0.7293393082877714
+    Attrib Major_category=Communications & Journalism    -0.6352445239460025
+    Attrib Major_category=Interdisciplinary    -1.6862790987655871
+    Attrib Total    1.100915155113253
+    Attrib Sample_size    0.6555736901496192
+    Attrib Men    -1.0455064347682566
+    Attrib Women    -0.8204256579051792
+    Attrib ShareWomen    -2.66532104917164
+    Attrib Full_time_year_round    1.135681330316343
+    Attrib Median    0.5281082025162122
+    Attrib P25th    2.0603512118822107
+    Attrib P75th    0.7911548678157778
+    Attrib Non_college_jobs    0.300318548768753
+    Attrib Low_wage_jobs    0.25964567050472076
+Sigmoid Node 13
+    Inputs    Weights
+    Threshold    0.31494250289430803
+    Attrib Major_category=Engineering    -0.37610012480228894
+    Attrib Major_category=Business    1.451362915938338
+    Attrib Major_category=Physical Sciences    -2.2058809733373526
+    Attrib Major_category=Law & Public Policy    0.6734163006355672
+    Attrib Major_category=Computers & Mathematics    2.933823675834189
+    Attrib Major_category=Agriculture & Natural Resources    -1.397782182986769
+    Attrib Major_category=Industrial Arts & Consumer Services    -1.8370983743122857
+    Attrib Major_category=Arts    -1.2857459155586692
+    Attrib Major_category=Health    2.115410222042551
+    Attrib Major_category=Social Science    -0.22715410684147974
+    Attrib Major_category=Biology & Life Science    -0.8271501263275189
+    Attrib Major_category=Education    -2.213312478782008
+    Attrib Major_category=Humanities & Liberal Arts    -0.583274966321279
+    Attrib Major_category=Psychology & Social Work    -0.9229556496250437
+    Attrib Major_category=Communications & Journalism    0.0772269075529647
+    Attrib Major_category=Interdisciplinary    0.13522447699359433
+    Attrib Total    1.700033765691435
+    Attrib Sample_size    1.3313924812026972
+    Attrib Men    -1.6091074868449067
+    Attrib Women    0.7890762192125619
+    Attrib ShareWomen    3.7178828767469305
+    Attrib Full_time_year_round    1.4646733234188307
+    Attrib Median    0.46487748448756333
+    Attrib P25th    0.5602969743505336
+    Attrib P75th    -2.7736671786144504
+    Attrib Non_college_jobs    1.6905200193204282
+    Attrib Low_wage_jobs    1.511799398963624
+Sigmoid Node 14
+    Inputs    Weights
+    Threshold    1.1253577435655648
+    Attrib Major_category=Engineering    -1.0202073619609997
+    Attrib Major_category=Business    -2.708102906248322
+    Attrib Major_category=Physical Sciences    -0.44584642743873865
+    Attrib Major_category=Law & Public Policy    -0.389923021627864
+    Attrib Major_category=Computers & Mathematics    -1.4893941670843123
+    Attrib Major_category=Agriculture & Natural Resources    -1.6276047095974076
+    Attrib Major_category=Industrial Arts & Consumer Services    0.6496094862273135
+    Attrib Major_category=Arts    -1.3945476710422429
+    Attrib Major_category=Health    -0.6094445524682329
+    Attrib Major_category=Social Science    -1.5627062533105427
+    Attrib Major_category=Biology & Life Science    -0.47019589328457695
+    Attrib Major_category=Education    0.1981715595539122
+    Attrib Major_category=Humanities & Liberal Arts    -0.7952547397806681
+    Attrib Major_category=Psychology & Social Work    -1.0333515040560364
+    Attrib Major_category=Communications & Journalism    -2.0375397551487393
+    Attrib Major_category=Interdisciplinary    -1.3177388610112213
+    Attrib Total    6.33798558927912
+    Attrib Sample_size    2.225502114446839
+    Attrib Men    -1.1316242955766727
+    Attrib Women    -0.6619610560368306
+    Attrib ShareWomen    0.6398127787386545
+    Attrib Full_time_year_round    5.6392524374637745
+    Attrib Median    0.37744103159049525
+    Attrib P25th    1.382045540431261
+    Attrib P75th    2.80365284062931
+    Attrib Non_college_jobs    1.22492513657311
+    Attrib Low_wage_jobs    2.404221380653721
+Sigmoid Node 15
+    Inputs    Weights
+    Threshold    -0.06146670409107842
+    Attrib Major_category=Engineering    0.8665424706093278
+    Attrib Major_category=Business    2.1676204357609667
+    Attrib Major_category=Physical Sciences    0.5120883342582988
+    Attrib Major_category=Law & Public Policy    1.3535525675969329
+    Attrib Major_category=Computers & Mathematics    -1.0649772708865
+    Attrib Major_category=Agriculture & Natural Resources    0.4742160421824565
+    Attrib Major_category=Industrial Arts & Consumer Services    -0.22440837069759548
+    Attrib Major_category=Arts    -0.6486588537602517
+    Attrib Major_category=Health    -0.4499213190627446
+    Attrib Major_category=Social Science    -1.3334078719490117
+    Attrib Major_category=Biology & Life Science    1.1581726170564868
+    Attrib Major_category=Education    -1.6785962844103146
+    Attrib Major_category=Humanities & Liberal Arts    -1.0520787512843421
+    Attrib Major_category=Psychology & Social Work    2.311786553710945
+    Attrib Major_category=Communications & Journalism    -0.8885651399252374
+    Attrib Major_category=Interdisciplinary    -0.9147938849976693
+    Attrib Total    -0.06767749929143257
+    Attrib Sample_size    0.0112122578100007
+    Attrib Men    -1.2864953635897716
+    Attrib Women    -0.5647120354533748
+    Attrib ShareWomen    -3.2722013368365683
+    Attrib Full_time_year_round    0.045953840691536824
+    Attrib Median    0.42982484480918637
+    Attrib P25th    0.519354096560903
+    Attrib P75th    -1.2581470821510605
+    Attrib Non_college_jobs    0.07749834265856757
+    Attrib Low_wage_jobs    0.1068352969335253
+Sigmoid Node 16
+    Inputs    Weights
+    Threshold    -0.8334453502222454
+    Attrib Major_category=Engineering    0.18644192393932144
+    Attrib Major_category=Business    2.336502012659558
+    Attrib Major_category=Physical Sciences    0.8374779711497933
+    Attrib Major_category=Law & Public Policy    0.3688900722542766
+    Attrib Major_category=Computers & Mathematics    2.1112659531056446
+    Attrib Major_category=Agriculture & Natural Resources    0.4451956252075132
+    Attrib Major_category=Industrial Arts & Consumer Services    0.8220703934802139
+    Attrib Major_category=Arts    0.9456074236221125
+    Attrib Major_category=Health    -0.10022586909737723
+    Attrib Major_category=Social Science    1.0052217136686914
+    Attrib Major_category=Biology & Life Science    -0.38229274149185294
+    Attrib Major_category=Education    -0.0738794497763273
+    Attrib Major_category=Humanities & Liberal Arts    1.718187980098118
+    Attrib Major_category=Psychology & Social Work    -0.369829337518427
+    Attrib Major_category=Communications & Journalism    2.002633496974093
+    Attrib Major_category=Interdisciplinary    -0.006760061034015472
+    Attrib Total    -3.5056586125613403
+    Attrib Sample_size    -1.5675085255491847
+    Attrib Men    -0.11061375057001321
+    Attrib Women    -0.4827917555024509
+    Attrib ShareWomen    -1.3859859152678993
+    Attrib Full_time_year_round    -3.247792989397105
+    Attrib Median    -1.5098468377178087
+    Attrib P25th    -0.516920431520353
+    Attrib P75th    -1.6505646085234422
+    Attrib Non_college_jobs    -0.4878216284109693
+    Attrib Low_wage_jobs    -0.7950456619745045
+Sigmoid Node 17
+    Inputs    Weights
+    Threshold    1.9773988040756496
+    Attrib Major_category=Engineering    -1.7373085834591726
+    Attrib Major_category=Business    -1.5942497188507863
+    Attrib Major_category=Physical Sciences    -1.6266580921169331
+    Attrib Major_category=Law & Public Policy    -2.272448351588203
+    Attrib Major_category=Computers & Mathematics    -1.9090399658739328
+    Attrib Major_category=Agriculture & Natural Resources    -1.4087412397152534
+    Attrib Major_category=Industrial Arts & Consumer Services    -3.7958604608262214
+    Attrib Major_category=Arts    -1.659605880718103
+    Attrib Major_category=Health    -1.0484159770943675
+    Attrib Major_category=Social Science    -1.8652250969245436
+    Attrib Major_category=Biology & Life Science    -1.841935027668956
+    Attrib Major_category=Education    -0.9768582796958791
+    Attrib Major_category=Humanities & Liberal Arts    -1.5198932291646088
+    Attrib Major_category=Psychology & Social Work    -1.4201607236345943
+    Attrib Major_category=Communications & Journalism    -2.98310114593719
+    Attrib Major_category=Interdisciplinary    -0.4334473416329626
+    Attrib Total    8.048834796033876
+    Attrib Sample_size    5.156831330145647
+    Attrib Men    0.8060120722727364
+    Attrib Women    0.4225589620034103
+    Attrib ShareWomen    0.027349012977576095
+    Attrib Full_time_year_round    7.276260376854916
+    Attrib Median    0.5230624075231234
+    Attrib P25th    -0.8002690312018859
+    Attrib P75th    0.021628248418945423
+    Attrib Non_college_jobs    3.6632989254917385
+    Attrib Low_wage_jobs    3.303805526820709
+Sigmoid Node 18
+    Inputs    Weights
+    Threshold    -1.1315693708006798
+    Attrib Major_category=Engineering    -0.9081555022393064
+    Attrib Major_category=Business    2.98424371670535
+    Attrib Major_category=Physical Sciences    0.930080464514368
+    Attrib Major_category=Law & Public Policy    0.9712464891123975
+    Attrib Major_category=Computers & Mathematics    -2.075895946949978
+    Attrib Major_category=Agriculture & Natural Resources    0.8435683794788468
+    Attrib Major_category=Industrial Arts & Consumer Services    0.10774329668727267
+    Attrib Major_category=Arts    0.8350283664606837
+    Attrib Major_category=Health    1.6921070503036415
+    Attrib Major_category=Social Science    0.39354871081801296
+    Attrib Major_category=Biology & Life Science    -0.50260746562583
+    Attrib Major_category=Education    2.1971377577801023
+    Attrib Major_category=Humanities & Liberal Arts    1.0504079720779695
+    Attrib Major_category=Psychology & Social Work    1.8052376259029224
+    Attrib Major_category=Communications & Journalism    3.2203385699115015
+    Attrib Major_category=Interdisciplinary    1.9319098753569213
+    Attrib Total    -6.346504081147486
+    Attrib Sample_size    -3.893172772843987
+    Attrib Men    1.5702090829757147
+    Attrib Women    0.6428304590776839
+    Attrib ShareWomen    5.101872774568601
+    Attrib Full_time_year_round    -6.025676996641917
+    Attrib Median    2.6694510972235843
+    Attrib P25th    1.3321729173077603
+    Attrib P75th    6.446778584156264
+    Attrib Non_college_jobs    -3.0038611340773045
+    Attrib Low_wage_jobs    -3.0219223060046327
+Class (0,1.67e+03]
+    Input
+    Node 0
+Class (1.5e+04,1.52e+05]
+    Input
+    Node 1
+Class (1.67e+03,3.33e+03]
+    Input
+    Node 2
+Class (6.67e+03,8.33e+03]
+    Input
+    Node 3
+Class (5e+03,6.67e+03]
+    Input
+    Node 4
+Class (3.33e+03,5e+03]
+    Input
+    Node 5
+Class (1e+04,1.17e+04]
+    Input
+    Node 6
+Class (1.33e+04,1.5e+04]
+    Input
+    Node 7
+Class (8.33e+03,1e+04]
+    Input
+    Node 8
+Class (1.17e+04,1.33e+04]
+    Input
+    Node 9
+
+
+Time taken to build model: 56.91 seconds
+
+=== Stratified cross-validation ===
+=== Summary ===
+
+Correctly Classified Instances          92               53.4884 %
+Incorrectly Classified Instances        80               46.5116 %
+Kappa statistic                          0.4214
+Mean absolute error                      0.1184
+Root mean squared error                  0.2569
+Relative absolute error                 71.5543 %
+Root relative squared error             89.5232 %
+Total Number of Instances              172     
+
+=== Detailed Accuracy By Class ===
+
+                 TP Rate  FP Rate  Precision  Recall   F-Measure  MCC      ROC Area  PRC Area  Class
+                 0.690    0.185    0.547      0.690    0.611      0.471    0.838     0.563     (0,1.67e+03]
+                 0.907    0.093    0.765      0.907    0.830      0.772    0.971     0.899     (1.5e+04,1.52e+05]
+                 0.344    0.107    0.423      0.344    0.379      0.257    0.716     0.340     (1.67e+03,3.33e+03]
+                 0.000    0.012    0.000      0.000    0.000      -0.022   0.829     0.139     (6.67e+03,8.33e+03]
+                 0.267    0.064    0.286      0.267    0.276      0.209    0.630     0.177     (5e+03,6.67e+03]
+                 0.235    0.077    0.250      0.235    0.242      0.162    0.677     0.224     (3.33e+03,5e+03]
+                 0.667    0.018    0.571      0.667    0.615      0.602    0.862     0.709     (1e+04,1.17e+04]
+                 0.000    0.000    ?          0.000    ?          ?        0.377     0.018     (1.33e+04,1.5e+04]
+                 0.200    0.012    0.333      0.200    0.250      0.241    0.854     0.161     (8.33e+03,1e+04]
+                 0.000    0.000    ?          0.000    ?          ?        0.385     0.014     (1.17e+04,1.33e+04]
+Weighted Avg.    0.535    0.103    ?          0.535    ?          ?        0.802     0.499     
+
+=== Confusion Matrix ===
+
+  a  b  c  d  e  f  g  h  i  j   <-- classified as
+ 29  0  7  0  3  2  1  0  0  0 |  a = (0,1.67e+03]
+  0 39  0  0  1  1  1  0  1  0 |  b = (1.5e+04,1.52e+05]
+ 14  1 11  0  3  3  0  0  0  0 |  c = (1.67e+03,3.33e+03]
+  1  1  2  0  0  3  0  0  0  0 |  d = (6.67e+03,8.33e+03]
+  4  2  1  1  4  1  1  0  1  0 |  e = (5e+03,6.67e+03]
+  5  0  5  1  2  4  0  0  0  0 |  f = (3.33e+03,5e+03]
+  0  1  0  0  1  0  4  0  0  0 |  g = (1e+04,1.17e+04]
+  0  3  0  0  0  0  0  0  0  0 |  h = (1.33e+04,1.5e+04]
+  0  2  0  0  0  2  0  0  1  0 |  i = (8.33e+03,1e+04]
+  0  2  0  0  0  0  0  0  0  0 |  j = (1.17e+04,1.33e+04]
+

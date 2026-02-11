@@ -1,0 +1,42 @@
+=== Run information ===
+
+Scheme:       weka.classifiers.lazy.IBk -K 1 -W 0 -A "weka.core.neighboursearch.LinearNNSearch -A \"weka.core.EuclideanDistance -R first-last\""
+Relation:     recsub_increased-weka.filters.unsupervised.attribute.Remove-R1-2-weka.filters.unsupervised.attribute.Remove-R14-25
+Instances:    317
+Attributes:   13
+              Major_category
+              Total
+              Sample_size
+              Men
+              Women
+              ShareWomen
+              Full_time_year_round
+              Median
+              P25th
+              P75th
+              College_jobs
+              Non_college_jobs
+              Low_wage_jobs
+Test mode:    split 66.0% train, remainder test
+
+=== Classifier model (full training set) ===
+
+IB1 instance-based classifier
+using 1 nearest neighbour(s) for classification
+
+
+Time taken to build model: 0 seconds
+
+=== Evaluation on test split ===
+
+Time taken to test model on test split: 0.01 seconds
+
+=== Summary ===
+
+Correlation coefficient                  0.9947
+Mean absolute error                   1910.7778
+Root mean squared error               4320.5641
+Relative absolute error                  6.07   %
+Root relative squared error             10.2192 %
+Total Number of Instances              108     
+

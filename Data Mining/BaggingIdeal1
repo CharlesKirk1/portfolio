@@ -1,0 +1,52 @@
+=== Run information ===
+
+Scheme:       weka.classifiers.meta.Bagging -P 100 -O -S 1 -num-slots 1 -I 10 -W weka.classifiers.trees.REPTree -- -M 2 -V 0.001 -N 3 -S 1 -L -1 -I 0.0
+Relation:     recsub-weka.filters.unsupervised.attribute.Remove-R1-3
+Instances:    173
+Attributes:   13
+              Major_category
+              Total
+              Sample_size
+              Men
+              Women
+              ShareWomen
+              Full_time_year_round
+              Median
+              P25th
+              P75th
+              College_jobs
+              Non_college_jobs
+              Low_wage_jobs
+Test mode:    split 66.0% train, remainder test
+
+=== Classifier model (full training set) ===
+
+Bagging with 10 iterations and base learner
+
+weka.classifiers.trees.REPTree -M 2 -V 0.001 -N 3 -S 1 -L -1 -I 0.0
+
+*** Out-of-bag estimates ***
+
+Correlation coefficient                  0.8063
+Mean absolute error                   5398.0647
+Root mean squared error              12878.628 
+Relative absolute error                 41.9642 %
+Root relative squared error             60.37   %
+Total Number of Instances              171     
+
+
+Time taken to build model: 0.01 seconds
+
+=== Evaluation on test split ===
+
+Time taken to test model on test split: 0 seconds
+
+=== Summary ===
+
+Correlation coefficient                  0.9241
+Mean absolute error                   5880.21  
+Root mean squared error              12274.6769
+Relative absolute error                 44.3592 %
+Root relative squared error             54.1269 %
+Total Number of Instances               59     
+

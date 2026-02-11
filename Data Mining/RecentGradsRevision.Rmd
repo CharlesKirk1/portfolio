@@ -1,0 +1,44 @@
+---
+title: "RecentGradsRevision"
+author: "Charles Kirk"
+date: "2024-09-21"
+output: word_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(tidyverse)
+```
+
+
+```{r}
+recent_grads <- read_csv("~/Dropbox/Charley/Juniata/Data Science Masters/Data Mining/recent-grads.csv")
+```
+```{r}
+recsub<-recent_grads%>%
+  select(Rank, Major, Major_category, Total, Sample_size, Men, Women, ShareWomen, Full_time_year_round, Median, P25th, P75th, College_jobs, Non_college_jobs, Low_wage_jobs)
+```
+
+
+```{r}
+recsub%>%
+  head()%>%
+  glimpse()
+```
+
+```{r}
+recsub%>%
+  tail()%>%
+  glimpse()
+```
+
+```{r}
+recsub%>%
+  sample_n(6, TRUE)%>%
+  glimpse()
+```
+
+

@@ -1,0 +1,84 @@
+=== Run information ===
+
+Scheme:       weka.classifiers.rules.JRip -F 3 -N 2.0 -O 2 -S 1
+Relation:     recsub_binned4-weka.filters.unsupervised.attribute.Remove-R1-2,13,17-27
+Instances:    172
+Attributes:   13
+              Major_category
+              Total
+              Sample_size
+              Men
+              Women
+              ShareWomen
+              Full_time_year_round
+              Median
+              P25th
+              P75th
+              Non_college_jobs
+              Low_wage_jobs
+              College_jobs_binned
+Test mode:    split 66.0% train, remainder test
+
+=== Classifier model (full training set) ===
+
+JRIP rules:
+===========
+
+(Sample_size >= 375) and (Full_time_year_round <= 21816) => College_jobs_binned=(1.33e+04,1.5e+04] (3.0/0.0)
+(Non_college_jobs >= 12037) and (Total <= 33599) => College_jobs_binned=(8.33e+03,1e+04] (2.0/0.0)
+(Low_wage_jobs >= 6866) and (Non_college_jobs <= 23059) => College_jobs_binned=(8.33e+03,1e+04] (2.0/0.0)
+(Major_category = Education) and (Total <= 20198) and (Total >= 14237) => College_jobs_binned=(1e+04,1.17e+04] (4.0/0.0)
+(Full_time_year_round <= 10548) and (Sample_size >= 132) and (Median <= 35000) => College_jobs_binned=(3.33e+03,5e+03] (9.0/1.0)
+(Total >= 3635) and (Total <= 10399) => College_jobs_binned=(1.67e+03,3.33e+03] (31.0/10.0)
+(Total <= 10510) => College_jobs_binned=(0,1.67e+03] (35.0/1.0)
+ => College_jobs_binned=(1.5e+04,1.52e+05] (86.0/43.0)
+
+Number of Rules : 8
+
+
+Time taken to build model: 0.07 seconds
+
+=== Evaluation on test split ===
+
+Time taken to test model on test split: 0 seconds
+
+=== Summary ===
+
+Correctly Classified Instances          32               55.1724 %
+Incorrectly Classified Instances        26               44.8276 %
+Kappa statistic                          0.4301
+Mean absolute error                      0.1157
+Root mean squared error                  0.2601
+Relative absolute error                 69.3871 %
+Root relative squared error             89.7662 %
+Total Number of Instances               58     
+
+=== Detailed Accuracy By Class ===
+
+                 TP Rate  FP Rate  Precision  Recall   F-Measure  MCC      ROC Area  PRC Area  Class
+                 0.769    0.311    0.417      0.769    0.541      0.388    0.762     0.392     (0,1.67e+03]
+                 1.000    0.116    0.750      1.000    0.857      0.814    0.942     0.750     (1.5e+04,1.52e+05]
+                 0.667    0.082    0.600      0.667    0.632      0.561    0.824     0.471     (1.67e+03,3.33e+03]
+                 0.000    0.000    ?          0.000    ?          ?        0.546     0.076     (6.67e+03,8.33e+03]
+                 0.000    0.000    ?          0.000    ?          ?        0.623     0.182     (5e+03,6.67e+03]
+                 0.250    0.056    0.250      0.250    0.250      0.194    0.745     0.151     (3.33e+03,5e+03]
+                 0.000    0.000    ?          0.000    ?          ?        0.804     0.083     (1e+04,1.17e+04]
+                 0.000    0.000    ?          0.000    ?          ?        0.833     0.050     (1.33e+04,1.5e+04]
+                 0.000    0.000    ?          0.000    ?          ?        0.607     0.044     (8.33e+03,1e+04]
+                 ?        0.000    ?          ?        ?          ?        ?         ?         (1.17e+04,1.33e+04]
+Weighted Avg.    0.552    0.116    ?          0.552    ?          ?        0.780     0.401     
+
+=== Confusion Matrix ===
+
+  a  b  c  d  e  f  g  h  i  j   <-- classified as
+ 10  0  2  0  0  1  0  0  0  0 |  a = (0,1.67e+03]
+  0 15  0  0  0  0  0  0  0  0 |  b = (1.5e+04,1.52e+05]
+  2  1  6  0  0  0  0  0  0  0 |  c = (1.67e+03,3.33e+03]
+  2  2  0  0  0  0  0  0  0  0 |  d = (6.67e+03,8.33e+03]
+  5  0  1  0  0  2  0  0  0  0 |  e = (5e+03,6.67e+03]
+  2  0  1  0  0  1  0  0  0  0 |  f = (3.33e+03,5e+03]
+  2  0  0  0  0  0  0  0  0  0 |  g = (1e+04,1.17e+04]
+  0  1  0  0  0  0  0  0  0  0 |  h = (1.33e+04,1.5e+04]
+  1  1  0  0  0  0  0  0  0  0 |  i = (8.33e+03,1e+04]
+  0  0  0  0  0  0  0  0  0  0 |  j = (1.17e+04,1.33e+04]
+

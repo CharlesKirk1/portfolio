@@ -1,0 +1,218 @@
+=== Run information ===
+
+Scheme:       weka.classifiers.functions.MultilayerPerceptron -L 0.3 -M 0.2 -N 500 -V 0 -S 0 -E 20 -H "2, 2" -G -R
+Relation:     recsub_binned4-weka.filters.unsupervised.attribute.Remove-R1-2,13,17-27
+Instances:    172
+Attributes:   13
+              Major_category
+              Total
+              Sample_size
+              Men
+              Women
+              ShareWomen
+              Full_time_year_round
+              Median
+              P25th
+              P75th
+              Non_college_jobs
+              Low_wage_jobs
+              College_jobs_binned
+Test mode:    10-fold cross-validation
+
+=== Classifier model (full training set) ===
+
+Sigmoid Node 0
+    Inputs    Weights
+    Threshold    -4.686350835568863
+    Node 12    6.357000957368627
+    Node 13    -4.6444777307353995
+Sigmoid Node 1
+    Inputs    Weights
+    Threshold    -5.746690424949509
+    Node 12    -8.048885435948845
+    Node 13    8.639039939044714
+Sigmoid Node 2
+    Inputs    Weights
+    Threshold    -0.07613658713259136
+    Node 12    -1.4604466594971117
+    Node 13    -7.675083249297945
+Sigmoid Node 3
+    Inputs    Weights
+    Threshold    -1.7164033324852177
+    Node 12    -3.0653847196014543
+    Node 13    -2.0498695988659965
+Sigmoid Node 4
+    Inputs    Weights
+    Threshold    0.07750901282027446
+    Node 12    -5.83212556335954
+    Node 13    -4.1864592903584406
+Sigmoid Node 5
+    Inputs    Weights
+    Threshold    -0.5210807248288867
+    Node 12    -1.8646530880671917
+    Node 13    -5.89249758811729
+Sigmoid Node 6
+    Inputs    Weights
+    Threshold    -2.6527328077757386
+    Node 12    -2.245226993297762
+    Node 13    -0.25150623973230934
+Sigmoid Node 7
+    Inputs    Weights
+    Threshold    -3.0127387886612955
+    Node 12    -2.9510641758962763
+    Node 13    -0.525919946188516
+Sigmoid Node 8
+    Inputs    Weights
+    Threshold    -2.0892384254078213
+    Node 12    -4.335629916089716
+    Node 13    -1.083443832900829
+Sigmoid Node 9
+    Inputs    Weights
+    Threshold    -3.4108920447523294
+    Node 12    -2.2441264297435812
+    Node 13    -1.246542274428488
+Sigmoid Node 10
+    Inputs    Weights
+    Threshold    -3.087165981344022
+    Attrib Major_category=Engineering    1.0692251591017468
+    Attrib Major_category=Business    7.2398935603307235
+    Attrib Major_category=Physical Sciences    1.553382733978951
+    Attrib Major_category=Law & Public Policy    3.109108732850963
+    Attrib Major_category=Computers & Mathematics    4.386589234276016
+    Attrib Major_category=Agriculture & Natural Resources    3.0012000346809984
+    Attrib Major_category=Industrial Arts & Consumer Services    1.6714794202081549
+    Attrib Major_category=Arts    4.917060407193936
+    Attrib Major_category=Health    1.8515007327759974
+    Attrib Major_category=Social Science    2.8579418828096017
+    Attrib Major_category=Biology & Life Science    1.9210527696944226
+    Attrib Major_category=Education    -0.02861300889821443
+    Attrib Major_category=Humanities & Liberal Arts    2.930211685391429
+    Attrib Major_category=Psychology & Social Work    1.6099715825728997
+    Attrib Major_category=Communications & Journalism    4.564811160859067
+    Attrib Major_category=Interdisciplinary    1.0378272138139084
+    Attrib Total    -15.955637373819911
+    Attrib Sample_size    -6.918303543811478
+    Attrib Men    -0.8826732084930541
+    Attrib Women    -0.11256818273848165
+    Attrib ShareWomen    -0.9624047731843942
+    Attrib Full_time_year_round    -13.94667015108272
+    Attrib Median    -1.7491063986309807
+    Attrib P25th    2.2742073863250667
+    Attrib P75th    -2.2790169259728357
+    Attrib Non_college_jobs    -3.0657780853944905
+    Attrib Low_wage_jobs    -4.8961348993949025
+Sigmoid Node 11
+    Inputs    Weights
+    Threshold    -3.061718667151126
+    Attrib Major_category=Engineering    1.721249096824172
+    Attrib Major_category=Business    3.004585849400991
+    Attrib Major_category=Physical Sciences    1.7483092010022738
+    Attrib Major_category=Law & Public Policy    1.7118911065202942
+    Attrib Major_category=Computers & Mathematics    -0.24695385006161008
+    Attrib Major_category=Agriculture & Natural Resources    1.9162436294661835
+    Attrib Major_category=Industrial Arts & Consumer Services    6.788025968479673
+    Attrib Major_category=Arts    1.927455910804276
+    Attrib Major_category=Health    0.6223957879698306
+    Attrib Major_category=Social Science    1.731574328819709
+    Attrib Major_category=Biology & Life Science    1.1839509502422052
+    Attrib Major_category=Education    4.8906230462243006
+    Attrib Major_category=Humanities & Liberal Arts    2.2742050342333338
+    Attrib Major_category=Psychology & Social Work    2.8115766120776025
+    Attrib Major_category=Communications & Journalism    9.119662109097638
+    Attrib Major_category=Interdisciplinary    1.5395001563855057
+    Attrib Total    -13.201207961679387
+    Attrib Sample_size    -8.760878540975476
+    Attrib Men    0.619702054532272
+    Attrib Women    1.018858182462699
+    Attrib ShareWomen    1.752046229422636
+    Attrib Full_time_year_round    -12.450831767306315
+    Attrib Median    2.5837975803092403
+    Attrib P25th    -1.3448161059589427
+    Attrib P75th    7.0299361079029286
+    Attrib Non_college_jobs    -6.923841267719229
+    Attrib Low_wage_jobs    -6.235002873348758
+Sigmoid Node 12
+    Inputs    Weights
+    Threshold    -8.505090701234256
+    Node 10    7.642766990998043
+    Node 11    6.334877246312152
+Sigmoid Node 13
+    Inputs    Weights
+    Threshold    2.0577181256920465
+    Node 10    -6.670348281771316
+    Node 11    -2.492304228122893
+Class (0,1.67e+03]
+    Input
+    Node 0
+Class (1.5e+04,1.52e+05]
+    Input
+    Node 1
+Class (1.67e+03,3.33e+03]
+    Input
+    Node 2
+Class (6.67e+03,8.33e+03]
+    Input
+    Node 3
+Class (5e+03,6.67e+03]
+    Input
+    Node 4
+Class (3.33e+03,5e+03]
+    Input
+    Node 5
+Class (1e+04,1.17e+04]
+    Input
+    Node 6
+Class (1.33e+04,1.5e+04]
+    Input
+    Node 7
+Class (8.33e+03,1e+04]
+    Input
+    Node 8
+Class (1.17e+04,1.33e+04]
+    Input
+    Node 9
+
+
+Time taken to build model: 26.37 seconds
+
+=== Stratified cross-validation ===
+=== Summary ===
+
+Correctly Classified Instances          78               45.3488 %
+Incorrectly Classified Instances        94               54.6512 %
+Kappa statistic                          0.3029
+Mean absolute error                      0.1266
+Root mean squared error                  0.2655
+Relative absolute error                 76.5192 %
+Root relative squared error             92.5325 %
+Total Number of Instances              172     
+
+=== Detailed Accuracy By Class ===
+
+                 TP Rate  FP Rate  Precision  Recall   F-Measure  MCC      ROC Area  PRC Area  Class
+                 0.643    0.208    0.500      0.643    0.563      0.403    0.838     0.588     (0,1.67e+03]
+                 0.837    0.132    0.679      0.837    0.750      0.662    0.943     0.840     (1.5e+04,1.52e+05]
+                 0.438    0.271    0.269      0.438    0.333      0.141    0.681     0.280     (1.67e+03,3.33e+03]
+                 0.000    0.000    ?          0.000    ?          ?        0.742     0.096     (6.67e+03,8.33e+03]
+                 0.000    0.064    0.000      0.000    0.000      -0.077   0.521     0.096     (5e+03,6.67e+03]
+                 0.059    0.000    1.000      0.059    0.111      0.231    0.669     0.169     (3.33e+03,5e+03]
+                 0.000    0.012    0.000      0.000    0.000      -0.021   0.705     0.104     (1e+04,1.17e+04]
+                 0.000    0.000    ?          0.000    ?          ?        0.730     0.044     (1.33e+04,1.5e+04]
+                 0.000    0.000    ?          0.000    ?          ?        0.920     0.173     (8.33e+03,1e+04]
+                 0.000    0.000    ?          0.000    ?          ?        0.688     0.027     (1.17e+04,1.33e+04]
+Weighted Avg.    0.453    0.140    ?          0.453    ?          ?        0.781     0.445     
+
+=== Confusion Matrix ===
+
+  a  b  c  d  e  f  g  h  i  j   <-- classified as
+ 27  1 13  0  1  0  0  0  0  0 |  a = (0,1.67e+03]
+  0 36  3  0  3  0  1  0  0  0 |  b = (1.5e+04,1.52e+05]
+ 17  1 14  0  0  0  0  0  0  0 |  c = (1.67e+03,3.33e+03]
+  0  1  4  0  2  0  0  0  0  0 |  d = (6.67e+03,8.33e+03]
+  5  4  6  0  0  0  0  0  0  0 |  e = (5e+03,6.67e+03]
+  4  0 10  0  1  1  1  0  0  0 |  f = (3.33e+03,5e+03]
+  1  3  1  0  1  0  0  0  0  0 |  g = (1e+04,1.17e+04]
+  0  3  0  0  0  0  0  0  0  0 |  h = (1.33e+04,1.5e+04]
+  0  2  1  0  2  0  0  0  0  0 |  i = (8.33e+03,1e+04]
+  0  2  0  0  0  0  0  0  0  0 |  j = (1.17e+04,1.33e+04]
+

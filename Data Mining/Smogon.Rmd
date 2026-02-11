@@ -1,0 +1,26 @@
+---
+title: "Smogon"
+author: "Charles Kirk"
+date: "2024-09-07"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(readr)
+```
+
+```{r}
+smogon <- read_csv("/Users/Charley/Dropbox/Charley/Juniata/Data Science Masters/Data Mining/smogon.csv")
+```
+
+```{r}
+smogon
+```
+
+Dataset Narrative
+
+Tentatively I may call the project Smogon Data Mining. It was suggested that we pick something from our major, but my major is Data Science so I just tried to pick a subject that was somewhat interesting to me. This dataset is about pokemon, their typings, their stats, and their competitive tiering.

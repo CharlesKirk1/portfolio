@@ -1,0 +1,28 @@
+---
+title: "RecentGrads11/04/24Draft"
+author: "Charles Kirk"
+date: "2024-11-05"
+output:
+  word_document: default
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(tidyverse)
+library(GGally)
+```
+
+```{r}
+recent_grads <- read_csv("~/Dropbox/Charley/Juniata/Data Science Masters/Data Mining/recent-grads.csv")
+```
+
+
+```{r}
+recent_grads%>%
+  print()
+```
+

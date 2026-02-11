@@ -1,0 +1,50 @@
+=== Run information ===
+
+Scheme:       weka.associations.Apriori -N 10 -T 0 -C 0.9 -D 0.05 -U 1.0 -M 0.1 -S -1.0 -c -1
+Relation:     recsub_binned4-weka.filters.unsupervised.attribute.Remove-R1-2,4-15
+Instances:    172
+Attributes:   13
+              Major_category
+              College_jobs_binned
+              Non_college_jobs_binned
+              Median_binned
+              Total_binned
+              Sample_size_binned
+              Men_binned
+              Women_binned
+              ShareWomen_binned
+              Full_time_year_round_binned
+              P25th_binned
+              P75th_binned
+              Low_wage_jobs_binned
+=== Associator model (full training set) ===
+
+
+Apriori
+=======
+
+Minimum support: 0.75 (129 instances)
+Minimum metric <confidence>: 0.9
+Number of cycles performed: 5
+
+Generated sets of large itemsets:
+
+Size of set of large itemsets L(1): 7
+
+Size of set of large itemsets L(2): 5
+
+Size of set of large itemsets L(3): 1
+
+Best rules found:
+
+ 1. Full_time_year_round_binned=(-88.8,2.01e+04] 131 ==> Sample_size_binned=(-2.21,423] 131    <conf:(1)> lift:(1.25) lev:(0.15) [25] conv:(25.9)
+ 2. Sample_size_binned=(-2.21,423] Low_wage_jobs_binned=(-48.2,4.82e+03] 131 ==> Non_college_jobs_binned=(-148,1.48e+04] 131    <conf:(1)> lift:(1.26) lev:(0.15) [26] conv:(26.66)
+ 3. Low_wage_jobs_binned=(-48.2,4.82e+03] 137 ==> Non_college_jobs_binned=(-148,1.48e+04] 136    <conf:(0.99)> lift:(1.25) lev:(0.16) [26] conv:(13.94)
+ 4. Non_college_jobs_binned=(-148,1.48e+04] 137 ==> Low_wage_jobs_binned=(-48.2,4.82e+03] 136    <conf:(0.99)> lift:(1.25) lev:(0.16) [26] conv:(13.94)
+ 5. Non_college_jobs_binned=(-148,1.48e+04] Sample_size_binned=(-2.21,423] 132 ==> Low_wage_jobs_binned=(-48.2,4.82e+03] 131    <conf:(0.99)> lift:(1.25) lev:(0.15) [25] conv:(13.43)
+ 6. Total_binned=(-270,3.95e+04] 130 ==> Sample_size_binned=(-2.21,423] 129    <conf:(0.99)> lift:(1.24) lev:(0.14) [24] conv:(12.85)
+ 7. Non_college_jobs_binned=(-148,1.48e+04] 137 ==> Sample_size_binned=(-2.21,423] 132    <conf:(0.96)> lift:(1.2) lev:(0.13) [22] conv:(4.51)
+ 8. Non_college_jobs_binned=(-148,1.48e+04] Low_wage_jobs_binned=(-48.2,4.82e+03] 136 ==> Sample_size_binned=(-2.21,423] 131    <conf:(0.96)> lift:(1.2) lev:(0.13) [21] conv:(4.48)
+ 9. Sample_size_binned=(-2.21,423] 138 ==> Non_college_jobs_binned=(-148,1.48e+04] 132    <conf:(0.96)> lift:(1.2) lev:(0.13) [22] conv:(4.01)
+10. Low_wage_jobs_binned=(-48.2,4.82e+03] 137 ==> Sample_size_binned=(-2.21,423] 131    <conf:(0.96)> lift:(1.19) lev:(0.12) [21] conv:(3.87)
+

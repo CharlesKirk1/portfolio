@@ -1,0 +1,138 @@
+=== Run information ===
+
+Scheme:       weka.classifiers.trees.J48 -C 0.25 -M 2 -output-debug-info
+Relation:     recsub_increased-weka.filters.unsupervised.attribute.Remove-R1-2,4-15
+Instances:    317
+Attributes:   13
+              Major_category
+              College_jobs_binned
+              Non_college_jobs_binned
+              Median_binned
+              Total_binned
+              Sample_size_binned
+              Men_binned
+              Women_binned
+              ShareWomen_binned
+              Full_time_year_round_binned
+              P25th_binned
+              P75th_binned
+              Low_wage_jobs_binned
+Test mode:    split 66.0% train, remainder test
+
+=== Classifier model (full training set) ===
+
+J48 pruned tree
+------------------
+
+Women_binned = (-307,1.02e+05]
+|   Median_binned = (8.07e+04,1.1e+05]: (-152,1.52e+04] (1.0)
+|   Median_binned = (5.13e+04,8.07e+04]
+|   |   Full_time_year_round_binned = (-88.8,6.67e+04]
+|   |   |   P25th_binned = (6.95e+04,9.51e+04]: (4.55e+04,6.07e+04] (0.0)
+|   |   |   P25th_binned = (4.4e+04,6.95e+04]
+|   |   |   |   P75th_binned = (9.07e+04,1.25e+05]: (-152,1.52e+04] (2.0)
+|   |   |   |   P75th_binned = (5.63e+04,9.07e+04]: (4.55e+04,6.07e+04] (24.0/4.0)
+|   |   |   |   P75th_binned = (2.19e+04,5.63e+04]: (-152,1.52e+04] (1.0)
+|   |   |   P25th_binned = (1.84e+04,4.4e+04]: (-152,1.52e+04] (13.0/1.0)
+|   |   Full_time_year_round_binned = (6.67e+04,1.33e+05]: (6.07e+04,7.58e+04] (10.0)
+|   |   Full_time_year_round_binned = (1.33e+05,2e+05]: (4.55e+04,6.07e+04] (0.0)
+|   Median_binned = (2.19e+04,5.13e+04]
+|   |   Low_wage_jobs_binned = (-48.2,1.61e+04]: (-152,1.52e+04] (157.0/47.0)
+|   |   Low_wage_jobs_binned = (1.61e+04,3.21e+04]
+|   |   |   Major_category = Engineering: (3.03e+04,4.55e+04] (0.0)
+|   |   |   Major_category = Business: (1.52e+04,3.03e+04] (2.0)
+|   |   |   Major_category = Physical Sciences: (3.03e+04,4.55e+04] (0.0)
+|   |   |   Major_category = Law & Public Policy: (1.52e+04,3.03e+04] (1.0)
+|   |   |   Major_category = Agriculture & Natural Resources: (3.03e+04,4.55e+04] (0.0)
+|   |   |   Major_category = Industrial Arts & Consumer Services: (1.52e+04,3.03e+04] (1.0)
+|   |   |   Major_category = Arts: (3.03e+04,4.55e+04] (0.0)
+|   |   |   Major_category = Social Science: (3.03e+04,4.55e+04] (10.0)
+|   |   |   Major_category = Computers & Mathematics: (3.03e+04,4.55e+04] (0.0)
+|   |   |   Major_category = Health: (3.03e+04,4.55e+04] (0.0)
+|   |   |   Major_category = Biology & Life Science: (3.03e+04,4.55e+04] (0.0)
+|   |   |   Major_category = Education: (3.03e+04,4.55e+04] (0.0)
+|   |   |   Major_category = Humanities & Liberal Arts
+|   |   |   |   Sample_size_binned = (-2.21,1.41e+03]: (3.03e+04,4.55e+04] (10.0)
+|   |   |   |   Sample_size_binned = (1.41e+03,2.81e+03]: (4.55e+04,6.07e+04] (10.0)
+|   |   |   |   Sample_size_binned = (2.81e+03,4.22e+03]: (4.55e+04,6.07e+04] (0.0)
+|   |   |   Major_category = Psychology & Social Work: (3.03e+04,4.55e+04] (0.0)
+|   |   |   Major_category = Communications & Journalism: (3.03e+04,4.55e+04] (10.0)
+|   |   |   Major_category = Interdisciplinary: (3.03e+04,4.55e+04] (0.0)
+|   |   Low_wage_jobs_binned = (3.21e+04,4.83e+04]: (3.03e+04,4.55e+04] (10.0)
+Women_binned = (1.02e+05,2.05e+05]
+|   Sample_size_binned = (-2.21,1.41e+03]
+|   |   Full_time_year_round_binned = (-88.8,6.67e+04]
+|   |   |   ShareWomen_binned = (-0.000969,0.323]: (-152,1.52e+04] (0.0)
+|   |   |   ShareWomen_binned = (0.323,0.646]: (-152,1.52e+04] (3.0)
+|   |   |   ShareWomen_binned = (0.646,0.97]: (1.52e+04,3.03e+04] (2.0)
+|   |   Full_time_year_round_binned = (6.67e+04,1.33e+05]: (7.58e+04,9.1e+04] (20.0)
+|   |   Full_time_year_round_binned = (1.33e+05,2e+05]: (7.58e+04,9.1e+04] (0.0)
+|   Sample_size_binned = (1.41e+03,2.81e+03]
+|   |   Major_category = Engineering: (1.36e+05,1.52e+05] (0.0)
+|   |   Major_category = Business: (1.36e+05,1.52e+05] (0.0)
+|   |   Major_category = Physical Sciences: (1.36e+05,1.52e+05] (0.0)
+|   |   Major_category = Law & Public Policy: (1.36e+05,1.52e+05] (0.0)
+|   |   Major_category = Agriculture & Natural Resources: (1.36e+05,1.52e+05] (0.0)
+|   |   Major_category = Industrial Arts & Consumer Services: (1.36e+05,1.52e+05] (0.0)
+|   |   Major_category = Arts: (1.36e+05,1.52e+05] (0.0)
+|   |   Major_category = Social Science: (1.36e+05,1.52e+05] (0.0)
+|   |   Major_category = Computers & Mathematics: (1.36e+05,1.52e+05] (0.0)
+|   |   Major_category = Health: (1.36e+05,1.52e+05] (10.0)
+|   |   Major_category = Biology & Life Science: (1.36e+05,1.52e+05] (0.0)
+|   |   Major_category = Education: (1.06e+05,1.21e+05] (10.0)
+|   |   Major_category = Humanities & Liberal Arts: (1.36e+05,1.52e+05] (0.0)
+|   |   Major_category = Psychology & Social Work: (1.36e+05,1.52e+05] (0.0)
+|   |   Major_category = Communications & Journalism: (1.36e+05,1.52e+05] (0.0)
+|   |   Major_category = Interdisciplinary: (1.36e+05,1.52e+05] (0.0)
+|   Sample_size_binned = (2.81e+03,4.22e+03]: (7.58e+04,9.1e+04] (0.0)
+Women_binned = (2.05e+05,3.07e+05]: (1.21e+05,1.36e+05] (10.0)
+
+Number of Leaves  : 	51
+
+Size of the tree : 	63
+
+
+Time taken to build model: 0 seconds
+
+=== Evaluation on test split ===
+
+Time taken to test model on test split: 0 seconds
+
+=== Summary ===
+
+Correctly Classified Instances          86               79.6296 %
+Incorrectly Classified Instances        22               20.3704 %
+Kappa statistic                          0.7334
+Mean absolute error                      0.0601
+Root mean squared error                  0.1867
+Relative absolute error                 34.9723 %
+Root relative squared error             62.7045 %
+Total Number of Instances              108     
+
+=== Detailed Accuracy By Class ===
+
+                 TP Rate  FP Rate  Precision  Recall   F-Measure  MCC      ROC Area  PRC Area  Class
+                 0.923    0.261    0.667      0.923    0.774      0.636    0.857     0.664     (-152,1.52e+04]
+                 0.000    0.000    ?          0.000    ?          ?        0.605     0.076     (1.52e+04,3.03e+04]
+                 1.000    0.030    0.727      1.000    0.842      0.840    0.991     0.830     (4.55e+04,6.07e+04]
+                 1.000    0.000    1.000      1.000    1.000      1.000    1.000     1.000     (6.07e+04,7.58e+04]
+                 1.000    0.000    1.000      1.000    1.000      1.000    1.000     1.000     (1.36e+05,1.52e+05]
+                 0.500    0.012    0.929      0.500    0.650      0.621    0.866     0.655     (3.03e+04,4.55e+04]
+                 1.000    0.000    1.000      1.000    1.000      1.000    1.000     1.000     (7.58e+04,9.1e+04]
+                 1.000    0.000    1.000      1.000    1.000      1.000    1.000     1.000     (1.06e+05,1.21e+05]
+                 1.000    0.000    1.000      1.000    1.000      1.000    1.000     1.000     (1.21e+05,1.36e+05]
+Weighted Avg.    0.796    0.099    ?          0.796    ?          ?        0.893     0.732     
+
+=== Confusion Matrix ===
+
+  a  b  c  d  e  f  g  h  i   <-- classified as
+ 36  0  3  0  0  0  0  0  0 |  a = (-152,1.52e+04]
+  5  0  0  0  0  1  0  0  0 |  b = (1.52e+04,3.03e+04]
+  0  0  8  0  0  0  0  0  0 |  c = (4.55e+04,6.07e+04]
+  0  0  0  6  0  0  0  0  0 |  d = (6.07e+04,7.58e+04]
+  0  0  0  0  4  0  0  0  0 |  e = (1.36e+05,1.52e+05]
+ 13  0  0  0  0 13  0  0  0 |  f = (3.03e+04,4.55e+04]
+  0  0  0  0  0  0 10  0  0 |  g = (7.58e+04,9.1e+04]
+  0  0  0  0  0  0  0  4  0 |  h = (1.06e+05,1.21e+05]
+  0  0  0  0  0  0  0  0  5 |  i = (1.21e+05,1.36e+05]
+

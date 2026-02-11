@@ -1,0 +1,83 @@
+---
+title: "MidtermProjectReport"
+author: "Charles Kirk"
+date: "2024-10-15"
+output: word_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(tidyverse)
+library(GGally)
+```
+
+```{r}
+recent_grads <- read_csv("~/Dropbox/Charley/Juniata/Data Science Masters/Data Mining/recent-grads.csv")
+```
+
+
+```{r}
+recent_grads%>%
+  glimpse()
+```
+
+```{r}
+recsub<-recent_grads%>%
+  select(Rank, Major, Major_category, Total, Sample_size, Men, Women, ShareWomen, Full_time_year_round, Median, P25th, P75th, College_jobs, Non_college_jobs, Low_wage_jobs)
+```
+
+```{r}
+write.csv(recsub,"~/Dropbox/Charley/Juniata/Data Science Masters/Data Mining/recsub.csv")
+```
+
+```{r}
+recsub%>%
+  group_by(Major_category)%>%
+  summarise(count=n())%>%
+  arrange(desc(count))
+```
+
+```{r}
+bintest<- recsub%>%
+  mutate(women_bin = cut(Women, breaks=3), total_bin = cut(Total, breaks=3))%>%
+  select(Major_category, women_bin, total_bin)
+```
+
+```{r}
+write.csv(bintest,"~/Dropbox/Charley/Juniata/Data Science Masters/Data Mining/bintest.csv")
+```
+
+
+```{r}
+miningset<-recsub%>%
+  mutate(col_rate = (College_jobs/Total), col_bin=cut(col_rate, breaks=10), median_bin=cut(Median, breaks=10), low_rate=(Low_wage_jobs/Total), low_bin=cut(low_rate, breaks=10))%>%
+  select(Major_category, col_bin, median_bin, low_bin)
+```
+
+```{r}
+write.csv(miningset,"~/Dropbox/Charley/Juniata/Data Science Masters/Data Mining/miningset.csv")
+```
+
+```{r}
+miningset%>%
+  ggplot()+
+  geom_bar(aes(col_bin))+
+  coord_flip()
+```
+
+```{r}
+miningset%>%
+  ggplot()+
+  geom_bar(aes(median_bin))+
+  coord_flip()
+```
+
+```{r}
+miningset%>%
+  ggplot()+
+  geom_bar(aes(low_bin))+
+  coord_flip()
+```

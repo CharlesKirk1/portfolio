@@ -1,0 +1,47 @@
+---
+title: "VertebrateProject"
+author: "Charles Kirk"
+date: "2024-10-26"
+output: word_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(ggplot2)
+library(dplyr)
+library(forcats)
+library(moderndive)
+library(tidyverse)
+library(readr)
+library(dplyr)
+library(readr)
+```
+
+```{r}
+vert<-read_csv("~/Dropbox/Charley/Juniata/Data Science Masters/Data Mining/vertebrate.csv")
+```
+```{r}
+?rename
+```
+
+```{r}
+(vert<-vert%>%
+  rename(WarmBlooded="Warm-blooded", GivesBirth="Gives Birth", AquaticCreature="Aquatic Creature", AerialCreature="Aerial Creature", HasLegs="Has Legs"))
+```
+
+```{r}
+vert<-vert %>% add_row(Name="spider", WarmBlooded=0, GivesBirth=0, AquaticCreature=0, AerialCreature=0, HasLegs=1, Hibernates=0, Class="arachnids", .before=16)%>%
+  add_row(Name="tiger", WarmBlooded=1, GivesBirth=1, AquaticCreature=0, AerialCreature=0, HasLegs=1, Hibernates=0, Class="mammals", .before=17)%>%
+  add_row(Name="crow", WarmBlooded=1, GivesBirth=0, AquaticCreature=0, AerialCreature=1, HasLegs=1, Hibernates=0, Class="birds", .before=18)%>%
+  add_row(Name="monkey", WarmBlooded=1, GivesBirth=1, AquaticCreature=0, AerialCreature=0, HasLegs=1, Hibernates=0, Class="mammals", .before=19)%>%
+  add_row(Name="bass", WarmBlooded=0, GivesBirth=0, AquaticCreature=1, AerialCreature=0, HasLegs=0, Hibernates=0, Class="fishes", .before=20)
+vert
+```
+
+```{r}
+write_csv(vert, "~/Dropbox/Charley/Juniata/Data Science Masters/Data Mining/newvert.csv")
+```
+

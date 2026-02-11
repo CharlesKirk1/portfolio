@@ -1,0 +1,83 @@
+=== Run information ===
+
+Scheme:       weka.classifiers.meta.Bagging -P 100 -O -S 1 -num-slots 1 -I 10 -W weka.classifiers.trees.J48 -- -C 0.25 -M 2
+Relation:     recsub_increased-weka.filters.unsupervised.attribute.Remove-R1-2,13,17-27
+Instances:    317
+Attributes:   13
+              Major_category
+              Total
+              Sample_size
+              Men
+              Women
+              ShareWomen
+              Full_time_year_round
+              Median
+              P25th
+              P75th
+              Non_college_jobs
+              Low_wage_jobs
+              College_jobs_binned
+Test mode:    split 66.0% train, remainder test
+
+=== Classifier model (full training set) ===
+
+Bagging with 10 iterations and base learner
+
+weka.classifiers.trees.J48 -C 0.25 -M 2
+
+*** Out-of-bag estimates ***
+
+Correctly Classified Instances         297               94.586  %
+Incorrectly Classified Instances        17                5.414  %
+Kappa statistic                          0.9287
+Mean absolute error                      0.0148
+Root mean squared error                  0.1026
+Relative absolute error                  8.7732 %
+Root relative squared error             35.357  %
+Total Number of Instances              314     
+
+
+Time taken to build model: 0.03 seconds
+
+=== Evaluation on test split ===
+
+Time taken to test model on test split: 0 seconds
+
+=== Summary ===
+
+Correctly Classified Instances         104               96.2963 %
+Incorrectly Classified Instances         4                3.7037 %
+Kappa statistic                          0.9525
+Mean absolute error                      0.0133
+Root mean squared error                  0.0835
+Relative absolute error                  7.715  %
+Root relative squared error             28.0442 %
+Total Number of Instances              108     
+
+=== Detailed Accuracy By Class ===
+
+                 TP Rate  FP Rate  Precision  Recall   F-Measure  MCC      ROC Area  PRC Area  Class
+                 1.000    0.029    0.951      1.000    0.975      0.961    0.999     0.999     (-152,1.52e+04]
+                 0.333    0.000    1.000      0.333    0.500      0.566    0.763     0.588     (1.52e+04,3.03e+04]
+                 1.000    0.020    0.800      1.000    0.889      0.885    0.990     0.800     (4.55e+04,6.07e+04]
+                 1.000    0.000    1.000      1.000    1.000      1.000    1.000     1.000     (6.07e+04,7.58e+04]
+                 1.000    0.000    1.000      1.000    1.000      1.000    1.000     1.000     (1.36e+05,1.52e+05]
+                 1.000    0.000    1.000      1.000    1.000      1.000    1.000     1.000     (3.03e+04,4.55e+04]
+                 1.000    0.000    1.000      1.000    1.000      1.000    1.000     1.000     (7.58e+04,9.1e+04]
+                 1.000    0.000    1.000      1.000    1.000      1.000    1.000     1.000     (1.06e+05,1.21e+05]
+                 1.000    0.000    1.000      1.000    1.000      1.000    1.000     1.000     (1.21e+05,1.36e+05]
+Weighted Avg.    0.963    0.012    0.968      0.963    0.955      0.953    0.986     0.962     
+
+=== Confusion Matrix ===
+
+  a  b  c  d  e  f  g  h  i   <-- classified as
+ 39  0  0  0  0  0  0  0  0 |  a = (-152,1.52e+04]
+  2  2  2  0  0  0  0  0  0 |  b = (1.52e+04,3.03e+04]
+  0  0  8  0  0  0  0  0  0 |  c = (4.55e+04,6.07e+04]
+  0  0  0  6  0  0  0  0  0 |  d = (6.07e+04,7.58e+04]
+  0  0  0  0  4  0  0  0  0 |  e = (1.36e+05,1.52e+05]
+  0  0  0  0  0 26  0  0  0 |  f = (3.03e+04,4.55e+04]
+  0  0  0  0  0  0 10  0  0 |  g = (7.58e+04,9.1e+04]
+  0  0  0  0  0  0  0  4  0 |  h = (1.06e+05,1.21e+05]
+  0  0  0  0  0  0  0  0  5 |  i = (1.21e+05,1.36e+05]
+

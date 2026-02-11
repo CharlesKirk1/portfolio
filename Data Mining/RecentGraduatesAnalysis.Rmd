@@ -1,0 +1,61 @@
+---
+title: "RecentGraduatesAnalysis"
+author: "Charles Kirk"
+date: "2024-09-20"
+output: word_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(tidyverse)
+library(GGally)
+```
+
+```{r}
+recent_grads <- read_csv("~/Dropbox/Charley/Juniata/Data Science Masters/Data Mining/recent-grads.csv")
+```
+
+
+```{r}
+recent_grads%>%
+  glimpse()
+```
+
+```{r}
+recsub<-recent_grads%>%
+  select(Rank, Major, Major_category, Total, Sample_size, Men, Women, ShareWomen, Full_time_year_round, Median, P25th, P75th, College_jobs, Non_college_jobs, Low_wage_jobs)
+```
+
+
+```{r}
+recent_grads%>%
+  mutate(Fullpart=Full_time+Part_time, Totminunem=Total-Unemployed, Colnoncol=College_jobs+Non_college_jobs)%>%
+  select(Employed, Fullpart, Totminunem, Colnoncol)%>%
+  filter(Employed<Colnoncol)
+```
+
+```{r}
+recsub%>%
+  mutate(Colprop=College_jobs/(College_jobs+Non_college_jobs), Lowprop=Low_wage_jobs/Total)%>%
+  select(ShareWomen, Colprop, Lowprop)%>%
+  pairs()
+```
+
+```{r}
+recsub%>%
+  mutate(Colprop=College_jobs/(College_jobs+Non_college_jobs), Lowprop=Low_wage_jobs/Total)%>%
+  select(ShareWomen, Colprop, Lowprop)%>%
+  pairs()+
+  theme(axis.title = element_text(size = 40), axis.text.x = element_text(angle = 90, size=30), axis.text.y = element_text(size = 30), legend.title = element_text(size = 40), legend.text = element_text(size = 30), legend.position = "bottom", strip.text = element_text(size = 40))
+```
+
+```{r}
+recsub%>%
+  select(Total, Sample_size, Men, Women, ShareWomen, Full_time_year_round, Median, P25th, P75th, College_jobs, Non_college_jobs, Low_wage_jobs)%>%
+ggpairs(axisLabels = "show")+
+  theme(axis.title = element_text(size = 4), axis.text.x = element_text(angle = 90, size=3), axis.text.y = element_text(size = 3), legend.title = element_text(size = 4), legend.text = element_text(size = 3), legend.position = "bottom", strip.text = element_text(size = 4))
+```
+

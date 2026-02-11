@@ -1,0 +1,88 @@
+=== Run information ===
+
+Scheme:       weka.classifiers.rules.JRip -F 3 -N 2.0 -O 2 -S 1
+Relation:     recsub_increased-weka.filters.unsupervised.attribute.Remove-R1-weka.filters.unsupervised.attribute.Remove-R1-weka.filters.unsupervised.attribute.Remove-R11-weka.filters.unsupervised.attribute.Remove-R14-24
+Instances:    317
+Attributes:   13
+              Major_category
+              Total
+              Sample_size
+              Men
+              Women
+              ShareWomen
+              Full_time_year_round
+              Median
+              P25th
+              P75th
+              Non_college_jobs
+              Low_wage_jobs
+              College_jobs_binned
+Test mode:    split 66.0% train, remainder test
+
+=== Classifier model (full training set) ===
+
+JRIP rules:
+===========
+
+(ShareWomen >= 0.923745) and (Total >= 170862) => College_jobs_binned=(1.06e+05,1.21e+05] (10.0/0.0)
+(Total >= 393735) => College_jobs_binned=(1.21e+05,1.36e+05] (10.0/0.0)
+(Major_category = Computers & Mathematics) and (Total >= 128319) => College_jobs_binned=(6.07e+04,7.58e+04] (10.0/0.0)
+(Women >= 187621) => College_jobs_binned=(1.36e+05,1.52e+05] (10.0/0.0)
+(Women >= 116825) and (Total >= 143718) => College_jobs_binned=(7.58e+04,9.1e+04] (20.0/0.0)
+(Full_time_year_round >= 13785) and (Total <= 62052) and (Non_college_jobs <= 9404) => College_jobs_binned=(1.52e+04,3.03e+04] (10.0/0.0)
+(Low_wage_jobs >= 4221) and (ShareWomen >= 0.667034) and (Total >= 53552) => College_jobs_binned=(1.52e+04,3.03e+04] (7.0/0.0)
+(Low_wage_jobs >= 4221) and (Non_college_jobs <= 14616) => College_jobs_binned=(1.52e+04,3.03e+04] (2.0/0.0)
+(Sample_size >= 1322) and (Total <= 174506) => College_jobs_binned=(1.52e+04,3.03e+04] (3.0/0.0)
+(Full_time_year_round >= 127230) and (Total <= 234590) => College_jobs_binned=(1.52e+04,3.03e+04] (2.0/0.0)
+(P25th >= 45000) and (Total >= 81527) => College_jobs_binned=(4.55e+04,6.07e+04] (20.0/0.0)
+(Non_college_jobs >= 71827) and (Major_category = Humanities & Liberal Arts) => College_jobs_binned=(4.55e+04,6.07e+04] (10.0/0.0)
+(Total >= 66530) => College_jobs_binned=(3.03e+04,4.55e+04] (72.0/2.0)
+ => College_jobs_binned=(-152,1.52e+04] (131.0/1.0)
+
+Number of Rules : 14
+
+
+Time taken to build model: 0.04 seconds
+
+=== Evaluation on test split ===
+
+Time taken to test model on test split: 0 seconds
+
+=== Summary ===
+
+Correctly Classified Instances         103               95.3704 %
+Incorrectly Classified Instances         5                4.6296 %
+Kappa statistic                          0.9409
+Mean absolute error                      0.0171
+Root mean squared error                  0.0964
+Relative absolute error                  9.941  %
+Root relative squared error             32.3758 %
+Total Number of Instances              108     
+
+=== Detailed Accuracy By Class ===
+
+                 TP Rate  FP Rate  Precision  Recall   F-Measure  MCC      ROC Area  PRC Area  Class
+                 0.949    0.043    0.925      0.949    0.937      0.900    0.975     0.920     (-152,1.52e+04]
+                 0.500    0.010    0.750      0.500    0.600      0.595    0.833     0.427     (1.52e+04,3.03e+04]
+                 1.000    0.000    1.000      1.000    1.000      1.000    1.000     1.000     (4.55e+04,6.07e+04]
+                 1.000    0.000    1.000      1.000    1.000      1.000    1.000     1.000     (6.07e+04,7.58e+04]
+                 1.000    0.000    1.000      1.000    1.000      1.000    1.000     1.000     (1.36e+05,1.52e+05]
+                 1.000    0.000    1.000      1.000    1.000      1.000    1.000     1.000     (3.03e+04,4.55e+04]
+                 1.000    0.000    1.000      1.000    1.000      1.000    1.000     1.000     (7.58e+04,9.1e+04]
+                 1.000    0.010    0.800      1.000    0.889      0.890    0.995     0.800     (1.06e+05,1.21e+05]
+                 1.000    0.000    1.000      1.000    1.000      1.000    1.000     1.000     (1.21e+05,1.36e+05]
+Weighted Avg.    0.954    0.017    0.952      0.954    0.951      0.937    0.981     0.932     
+
+=== Confusion Matrix ===
+
+  a  b  c  d  e  f  g  h  i   <-- classified as
+ 37  1  0  0  0  0  0  1  0 |  a = (-152,1.52e+04]
+  3  3  0  0  0  0  0  0  0 |  b = (1.52e+04,3.03e+04]
+  0  0  8  0  0  0  0  0  0 |  c = (4.55e+04,6.07e+04]
+  0  0  0  6  0  0  0  0  0 |  d = (6.07e+04,7.58e+04]
+  0  0  0  0  4  0  0  0  0 |  e = (1.36e+05,1.52e+05]
+  0  0  0  0  0 26  0  0  0 |  f = (3.03e+04,4.55e+04]
+  0  0  0  0  0  0 10  0  0 |  g = (7.58e+04,9.1e+04]
+  0  0  0  0  0  0  0  4  0 |  h = (1.06e+05,1.21e+05]
+  0  0  0  0  0  0  0  0  5 |  i = (1.21e+05,1.36e+05]
+

@@ -1,0 +1,313 @@
+---
+title: "RecentGrads11/09/24Draft"
+author: "Charles Kirk"
+date: "2024-11-09"
+output: word_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(tidyverse)
+library(GGally)
+library(classInt)
+library(Hmisc)
+library(funModeling)
+```
+
+```{r}
+recent_grads <- read_csv("~/Dropbox/Charley/Juniata/Data Science Masters/Data Mining/recent-grads.csv")
+```
+
+
+```{r}
+recsub<-recent_grads%>%
+  select(Rank, Major, Major_category, Total, Sample_size, Men, Women, ShareWomen, Full_time_year_round, Median, P25th, P75th, College_jobs, Non_college_jobs, Low_wage_jobs)
+```
+
+```{r}
+recsub%>%
+  summarise(mean(Total), min(Total), max(Total), min(College_jobs), max(College_jobs), min(Non_college_jobs), max(Non_college_jobs), min(Median), max(Median))
+```
+```{r}
+as.integer(TRUE)
+as.integer(FALSE)
+```
+
+```{r}
+recsub%>%
+  mutate("1-131245"=as.integer(Total<=131245),
+         "131246-262490"=as.integer(Total>131245 & Total<=262490))%>%
+  select(Total, "1-131245", "131246-262490")
+```
+
+```{r}
+?pivot_wider
+```
+
+```{r}
+recsub
+```
+
+
+```{r}
+recsub_binned<-recsub%>%
+  mutate(College_jobs_binned = cut(College_jobs, breaks=3),
+         Non_college_jobs_binned = cut(Non_college_jobs, breaks=3),
+         Median_binned = cut(Median, breaks=3),
+         Total_binned = cut(Total, breaks=3),
+         Sample_size_binned = cut(Sample_size, breaks=3),
+         Men_binned = cut(Men, breaks=3),
+         Women_binned = cut(Women, breaks=3),
+         ShareWomen_binned = cut(ShareWomen, breaks=3),
+         Full_time_year_round_binned = cut(Full_time_year_round, breaks=3),
+         P25th_binned = cut(P25th, breaks=3),
+         P75th_binned = cut(P75th, breaks=3),
+         Low_wage_jobs_binned = cut(Low_wage_jobs, breaks=3))
+```
+
+
+```{r}
+set.seed(74)
+recsub_binarized<-recsub%>%
+  select(Major, Major_category, College_jobs, Non_college_jobs, Median, Total)%>%
+  sample_n(20)
+recsub_binarized<-recsub_binarized%>%
+  mutate(College_jobs_binned = cut(College_jobs, breaks=3),
+         Non_college_jobs_binned = cut(Non_college_jobs, breaks=3),
+         Median_binned = cut(Median, breaks=3),
+         Total_binned = cut(Total, breaks=3))%>%
+  pivot_wider(names_from = College_jobs_binned, values_from = College_jobs, names_glue = "{College_jobs_binned}_{.value}")%>%
+  pivot_wider(names_from = Non_college_jobs_binned, values_from = Non_college_jobs, names_glue = "{Non_college_jobs_binned}_{.value}")%>%
+  pivot_wider(names_from = Median_binned, values_from = Median, names_glue = "{Median_binned}_{.value}")%>%
+  pivot_wider(names_from = Total_binned, values_from = Total, names_glue = "{Total_binned}_{.value}")
+recsub_binarized
+```
+
+
+```{r}
+set.seed(74)
+recsub_binarized<-recsub%>%
+  select(Major, Major_category, College_jobs, Non_college_jobs, Median, Total)%>%
+  sample_n(20)
+recsub_binarized<-recsub_binarized%>%
+  mutate(College_jobs_binned = cut(College_jobs, breaks=3),
+         Non_college_jobs_binned = cut(Non_college_jobs, breaks=3),
+         Median_binned = cut(Median, breaks=3),
+         Total_binned = cut(Total, breaks=3))%>%
+  pivot_wider(names_from = College_jobs_binned, values_from = College_jobs, names_glue = "{College_jobs_binned}_{.value}")%>%
+  pivot_wider(names_from = Non_college_jobs_binned, values_from = Non_college_jobs, names_glue = "{Non_college_jobs_binned}_{.value}")%>%
+  pivot_wider(names_from = Median_binned, values_from = Median, names_glue = "{Median_binned}_{.value}")%>%
+  pivot_wider(names_from = Total_binned, values_from = Total, names_glue = "{Total_binned}_{.value}")
+recsub_binarized<-replace(recsub_binarized, is.na(recsub_binarized), 0)
+recsub_binarized<-recsub_binarized%>%
+  mutate_if(is.numeric, ~1 * (. != 0))
+recsub_binarized
+```
+
+
+```{r}
+write_csv(recsub_binarized, "~/Dropbox/Charley/Juniata/Data Science Masters/Data Mining/recsub_binarized.csv")
+```
+
+```{r}
+write_csv(recsub_binned, "~/Dropbox/Charley/Juniata/Data Science Masters/Data Mining/recsub_binned.csv")
+```
+
+
+```{r}
+recsub%>%
+  count(Major_category)
+```
+
+```{r}
+recsub_binned2<-recsub%>%
+  mutate(College_jobs_binned = cut(College_jobs, breaks=10),
+         Non_college_jobs_binned = cut(Non_college_jobs, breaks=3),
+         Median_binned = cut(Median, breaks=3),
+         Total_binned = cut(Total, breaks=3),
+         Sample_size_binned = cut(Sample_size, breaks=3),
+         Men_binned = cut(Men, breaks=3),
+         Women_binned = cut(Women, breaks=3),
+         ShareWomen_binned = cut(ShareWomen, breaks=3),
+         Full_time_year_round_binned = cut(Full_time_year_round, breaks=3),
+         P25th_binned = cut(P25th, breaks=3),
+         P75th_binned = cut(P75th, breaks=3),
+         Low_wage_jobs_binned = cut(Low_wage_jobs, breaks=3))
+recsub_binned2%>%
+  select(College_jobs, College_jobs_binned)%>%
+  count(College_jobs_binned)
+```
+
+```{r}
+set.seed(56)
+recsub_training<-recsub_binned2%>%
+  sample_n(size=114)
+recsub_test<-setdiff(recsub_binned2, recsub_training)
+recsub_training%>%
+  count(College_jobs_binned)
+recsub_test
+```
+
+
+```{r}
+recsub_small_vals<-recsub_training%>%
+  filter(College_jobs<=30328.6)
+recsub_large_vals<-recsub_training%>%
+  filter(College_jobs>30328.6)
+recsub_small_vals
+recsub_large_vals
+```
+
+```{r}
+recsub_increased_training <- cbind(recsub_large_vals, rep(row.names(recsub_large_vals), each = 9))%>%
+  select(-"rep(row.names(recsub_large_vals), each = 9)")
+recsub_increased_training<-union_all(recsub_small_vals, recsub_increased_training)
+recsub_increased_training
+recsub_increased_training%>%
+  filter(College_jobs>=15000)
+```
+
+```{r}
+(recsub_test_sub<-recsub_test%>%
+  select(-c(College_jobs, Non_college_jobs_binned, Low_wage_jobs_binned, Major, Total_binned, Median_binned, ShareWomen_binned, P25th_binned, P75th_binned, Full_time_year_round_binned, Men_binned, Women_binned, Sample_size_binned, Rank)))
+```
+
+```{r}
+recsub_small_vals2<-recsub_increased_training%>%
+  filter(College_jobs<15000)
+recsub_large_vals2<-recsub_increased_training%>%
+  filter(College_jobs>=15000)
+recsub_increased_training2 <- cbind(recsub_large_vals2, rep(row.names(recsub_large_vals2), each = 4))%>%
+  select(-"rep(row.names(recsub_large_vals2), each = 4)")
+recsub_increased_training2<-union_all(recsub_small_vals2, recsub_increased_training2)
+recsub_increased_training2
+recsub_increased_training2%>%
+  filter(College_jobs>=15000)
+```
+
+```{r}
+x <- classIntervals(recsub$College_jobs, 4, style = 'quantile')
+x
+(quan<-quantile(recsub$College_jobs, probs = seq(0.1, 1, 0.1), na.rm = TRUE))
+recsub%>%
+  reframe(quantile(College_jobs, probs = seq(0.1, 1, 0.1), na.rm = TRUE))
+recsub%>%
+  mutate(College_jobs_binned=equal_freq(College_jobs, 10))%>%
+  count(College_jobs_binned)
+```
+
+
+```{r}
+recsub_binned3<-recsub%>%
+  mutate(College_jobs_binned = equal_freq(College_jobs, 10),
+         Non_college_jobs_binned = equal_freq(Non_college_jobs, 10),
+         Median_binned = equal_freq(Median, 10),
+         Total_binned = equal_freq(Total, 10),
+         Sample_size_binned = equal_freq(Sample_size, 10),
+         Men_binned = equal_freq(Men, 10),
+         Women_binned = equal_freq(Women, 10),
+         ShareWomen_binned = equal_freq(ShareWomen, 10),
+         Full_time_year_round_binned = equal_freq(Full_time_year_round, 10),
+         P25th_binned = equal_freq(P25th, 10),
+         P75th_binned = equal_freq(P75th, 10),
+         Low_wage_jobs_binned = equal_freq(Low_wage_jobs, 10))
+recsub_binned3%>%
+  select(College_jobs, College_jobs_binned)%>%
+  count(College_jobs_binned)
+```
+
+```{r}
+recsub%>%
+  filter(College_jobs<15000)
+```
+
+
+```{r}
+recsub%>%
+  reframe(quantile(College_jobs, probs = seq(0.1, 1, 0.1), na.rm = TRUE))
+recsub%>%
+  mutate(College_jobs_binned=cut(College_jobs, breaks=c(0, 1667, 3333, 5000, 6667, 8333, 10000, 11667, 13333, 15000, 151643)))%>%
+  count(College_jobs_binned)
+```
+
+```{r}
+recsub_binned4<-recsub%>%
+  mutate(College_jobs_binned=cut(College_jobs, breaks=c(0, 1667, 3333, 5000, 6667, 8333, 10000, 11667, 13333, 15000, 151643)),
+         Non_college_jobs_binned = cut(Non_college_jobs, breaks=10),
+         Median_binned = cut(Median, breaks=10),
+         Total_binned = cut(Total, breaks=10),
+         Sample_size_binned = cut(Sample_size, breaks=10),
+         Men_binned = cut(Men, breaks=10),
+         Women_binned = cut(Women, breaks=10),
+         ShareWomen_binned = cut(ShareWomen, breaks=10),
+         Full_time_year_round_binned = cut(Full_time_year_round, breaks=10),
+         P25th_binned = cut(P25th, breaks=10),
+         P75th_binned = cut(P75th, breaks=10),
+         Low_wage_jobs_binned = cut(Low_wage_jobs, breaks=10))%>%
+  filter(is.na(College_jobs_binned)==FALSE)
+recsub_binned4%>%
+  select(College_jobs, College_jobs_binned)%>%
+  count(College_jobs_binned)
+```
+
+```{r}
+recsub_tail<-
+  recsub%>%
+  tail(10)
+recsub_tail
+```
+
+
+```{r}
+write_csv(recsub_increased_training, "~/Dropbox/Charley/Juniata/Data Science Masters/Data Mining/recsub_increased_training.csv")
+```
+
+```{r}
+write_csv(recsub_increased_training2, "~/Dropbox/Charley/Juniata/Data Science Masters/Data Mining/recsub_increased_training2.csv")
+```
+
+```{r}
+write_csv(recsub_binned3, "~/Dropbox/Charley/Juniata/Data Science Masters/Data Mining/recsub_binned3.csv")
+```
+
+```{r}
+write_csv(recsub_binned4, "~/Dropbox/Charley/Juniata/Data Science Masters/Data Mining/recsub_binned4.csv")
+```
+
+```{r}
+write_csv(recsub_test, "~/Dropbox/Charley/Juniata/Data Science Masters/Data Mining/recsub_test.csv")
+```
+
+```{r}
+write_csv(recsub_test_sub, "~/Dropbox/Charley/Juniata/Data Science Masters/Data Mining/recsub_test_sub.csv")
+```
+
+
+```{r}
+write_csv(recsub_binned2, "~/Dropbox/Charley/Juniata/Data Science Masters/Data Mining/recsub_binned2.csv")
+```
+
+For classification rules, the dataset made with oversampling seemed to perform better on the test data.
+
+```{r}
+Non_college_and_Low_wage<-recsub_increased%>%
+  select(Non_college_jobs, Low_wage_jobs)
+College_jobs_and_Median<-recsub_increased%>%
+  select(College_jobs, Median)
+```
+
+```{r}
+write_csv(Non_college_and_Low_wage, "~/Dropbox/Charley/Juniata/Data Science Masters/Data Mining/Non_college_and_Low_wage.csv")
+```
+
+```{r}
+write_csv(College_jobs_and_Median, "~/Dropbox/Charley/Juniata/Data Science Masters/Data Mining/College_jobs_and_Median.csv")
+```
+
+```{r}
+write_csv(recsub_tail, "~/Dropbox/Charley/Juniata/Data Science Masters/Data Mining/recsub_tail.csv")
+```
+
