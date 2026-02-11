@@ -1,0 +1,17 @@
+Script started on 2024-11-15 21:08:42+00:00 [TERM="xterm-256color" TTY="/dev/pts/38" COLUMNS="142" LINES="24"]
+[?2004h]0;cdk100@ip-172-31-91-89: ~[01;32mcdk100@ip-172-31-91-89[00m:[01;34m~[00m$ exithead covidstats2.txtcat us-counties.csv | python3 covidmapco.py| sort | python3 covidredco.py>covidstats2.txt
+[?2004l[?2004h]0;cdk100@ip-172-31-91-89: ~[01;32mcdk100@ip-172-31-91-89[00m:[01;34m~[00m$ cat us-counties.csv | python3 covidmapco.py| sort | python3 covidredco.py>covidstats2.txt[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Cexit[Khead covidstats2.txt
+[?2004lAdams	24397 with 347 deaths from 787 daily reports
+Allegheny	259206 with 3143 deaths from 791 daily reports
+Armstrong	15039 with 328 deaths from 781 daily reports
+Beaver	39470 with 695 deaths from 788 daily reports
+Bedford	10792 with 265 deaths from 774 daily reports
+Berks	101231 with 1552 deaths from 787 daily reports
+Blair	29177 with 589 deaths from 779 daily reports
+Bradford	14703 with 190 deaths from 781 daily reports
+Bucks	121365 with 1810 deaths from 794 daily reports
+Butler	43832 with 696 deaths from 784 daily reports
+[?2004h]0;cdk100@ip-172-31-91-89: ~[01;32mcdk100@ip-172-31-91-89[00m:[01;34m~[00m$ exit
+[?2004lexit
+
+Script done on 2024-11-15 21:09:20+00:00 [COMMAND_EXIT_CODE="0"]
