@@ -1,0 +1,203 @@
+---
+title: "Visualization Part 1 Exercises"
+author: "Charley Kirk"
+date: "8/24/2024"
+output:
+  html_document: default
+  word_document: default
+---
+
+ModernDive is under a [Creative Commons Attribution - NonCommercial - ShareAlike 4.0 license](https://creativecommons.org/licenses/by-nc-sa/4.0/) so it is able to be modified with attribution as above. These are exercises based partially on the Learning Checks in ModernDive. 
+
+Before we can access the code that is prewritten for us, we need to access the library that contains that code and load it. The chunk below loads the libraries we need for this assignment. A library load chunk MUST start each RMarkdown file.
+
+Library Load
+```{r setup, message = FALSE}
+library(tidyverse)
+library(mosaicData)
+```
+
+Data for this assignment. 
+
+```{r}
+glimpse(Weather)
+head(Weather)
+```
+
+Get a subset of the weather in Chicago 
+```{r}
+CWeather=Weather %>% filter(city=="Chicago") #not responsible for using this code yet
+head(CWeather)
+glimpse(CWeather)
+
+```
+# Context for this assignment
+
+When we consider graphs in statistics for data science, we should describe the graph in terms of shape, center, dispersion and unusual points for single quantitative variable graphs and strength, direction, and linearity (or non linearity) and unusual points for two quantitative variables. Perhaps unlike your previous statistics course, statistics in the context of data science requires you to continue to discuss the questions that are raised as you examine the graph of the data. We begin to practice these skills in this assignment and continue to do so for the first section of this course. If you need a review of types of variables, shapes of distributions, measures of center and measures of dispersion, I recommend referring to the other statistics books reference on Moodle.
+
+1. 
+Take a look at both the `Weather` and `CWeather`. In what respect do these data frames differ? For example, think about the number of rows in each dataset. What is this data of? Type Weather into the help search to help you answer.
+
+```{r}
+glimpse(Weather)
+glimpse(CWeather)
+```
+
+```{r}
+?Weather
+```
+
+The Weather data frame consists of observations about the weather in various cities, with information including temperature, humidity and the date of each observation. The CWeather data frame contains only the observations in Weather that are referring to Chicago. That's why CWeather has fewer rows than Weather and why all the values for the city variable in CWeather are "Chicago."
+
+2. Here is a scatterplot with CWeather for the highest temperature in a day, high_temp, and the average temperature in a day, avg_temp. Both are in degrees F. What sort of relationship do these variables have? Why does that seem reasonable? Comment on any interesting or unusual features in this graph.
+
+```{r}
+ggplot(data=CWeather, mapping=aes(x=high_temp, y=avg_temp))+
+  geom_point() #ModernDive style
+ggplot(data=CWeather)+
+  geom_point(mapping=aes(x=high_temp, y=avg_temp)) #R for Data Science Style
+```
+
+The graph suggests these variables are positively correlated. This makes sense since both are referring to temperature, and if the highest temperature in a day is high it's likely that the average temperature of that day is also high.
+
+If you want a graph with proper labels here is the code.
+```{r}
+ggplot(data=CWeather, mapping=aes(x=high_temp, y=avg_temp))+
+  geom_point()+
+  labs(x="High Temperature", y="Average Temperature", title="Daily Temperatures in degrees F from Chicago in 2016-2017" )
+
+```
+
+
+
+
+3. Make a scatterplot with CWeather of avg_temp versus avg_dewpt. What sort of relationship do these variables have? Comment on any interesting or unusual features in this graph.
+
+```{r}
+ggplot(data=CWeather, mapping=aes(x=high_temp, y=avg_dewpt))+
+  geom_point()
+```
+
+Write your answer to unusual features and interesting features outside of the chunk
+
+These variables appear to have a positive correlation. There seem to be fewer data points closer to the origin. This could mean that in Chicago a high daily temperature below 25 and an average daily temperature below 20 are relatively uncommon.
+
+4. Make a scatterplot with CWeather of avg_humidty vs avg_vis. What sort of relationship do these variables have? Comment on any interesting or unusual features in this graph.
+
+
+```{r}
+ggplot(data=CWeather, mapping=aes(x=avg_humidity, y=avg_vis))+
+  geom_point()
+```
+These variables appear to have a negative correlation. The points seem to appear only on integer values of avg_vis, and I think that's because avg_vis is recorded mostly if not entirely with integer values. 
+
+5. Make a scatterplot with CWeather of avg_humidty vs avg_dewpoint. What sort of relationship do these variables have? Comment on any interesting or unusual features in this graph.
+
+```{r}
+ggplot(data=CWeather, mapping=aes(x=avg_humidity, y=avg_dewpt))+
+  geom_point()
+```
+There may be a weak positive correlation between avg_dewpt and avg_humidity. The graph doesn't show great linearity though and the points are very spread out.
+
+
+6.Make a scatterplot with CWeather of variables of choice. What sort of relationship do these variables have? Comment on any interesting or unusual features in this graph.
+
+```{r}
+ggplot(data=CWeather, mapping=aes(x=high_temp, y=high_hg))+
+  geom_point()
+```
+
+I made a scatterplot of high_temp and high_hg. It looks like the two variables may have a negative correlation. The points seem to be more densly plotted on the right side of the graph starting a little before the 75 high_temp mark.
+
+7. Below are  transparent and jittered versions of the graph in 2. What can you see that you couldn't before? Which is more useful here jittering or transparency?
+
+
+```{r}
+ggplot(data=CWeather, mapping=aes(x=high_temp,y=avg_temp))+
+  geom_point(alpha=.2)+
+  labs(x="High Temperature", y="Average Temperature", title="Daily Temperatures in degrees F from Chicago in 2016-2017" ) #transparent version
+
+ggplot(data=CWeather, mapping=aes(x=high_temp, y=avg_temp))+
+  geom_jitter(width = 5, height = 5)+
+  labs(x="High Temperature", y="Average Temperature", title="Daily Temperatures in degrees F from Chicago in 2016-2017" ) #jitterend version, note the width and height command are not needed, R will pick the jitter if you leave them out.
+
+```
+
+I can see that the points are more densely plotted on the right third of the graph than I had previously thought. I think jittering is actually more helpful than transparency here because jittering kind of increases the thickness of the line where the points are more densely clustered and that stands out better than a slightly darker color.
+
+8. Here is a time series plot of temperatures. Describe the graph. What do you wonder? Comment on what this graph tells us about temperature over the dates.
+```{r}
+ggplot(data = CWeather, mapping = aes(x = date, y = avg_temp)) +
+  geom_line()+
+  labs(x="Date", y="Average Temperature",title="Daily Average Temperatures in degrees F from Chicago in 2016-2017" )
+```
+The graph shows the daily average temperature for every day between January 1st 2016 and January 1st 2018. The lowest points on the graph seems to be roughly within the December-January periods which makes sense since those months are in the middle of winter. The higher points on the graph seem to be around the middle of 2016 and the middle of 2017, during the summer months. That said the highest point on the graph might actually be about three-quarters of the way through 2017. I wonder if there's a name for a distribution with this shape that I don't remember. I'd almost say it was bimodal but that may just refer to the frequency of one variable.
+
+9. Reconsider the graph in 8. Why do we use the variable date instead of day for the graph? What would occur if day was used? 
+
+We use date because date never repeats values, whereas day does. If we were to graph date with average temperature we would probably get multiple average temperatures for each value of day and then the graph would fail the vertical line test.
+
+10. Make a line chart of avg_dewpt vs. date. Comment on what this graph tells us about dew point over the dates.
+
+```{r}
+ggplot(data = CWeather, mapping = aes(x = date, y = avg_dewpt)) +
+  geom_line()
+```
+This graph suggests that dew point is higher during the summer months and lower during the winter months.
+
+11. Here is a histogram of avg_temp. Describe the graph. What do you wonder? Comment on what this graph tells us about temperature. What's the center? Would you describe the graph as symmetric or skewed? Why? Is this data spread out greatly from the center or is it close?  
+
+```{r}
+ggplot(data = CWeather, mapping = aes( x = avg_temp)) +
+  geom_histogram(bins=15)+
+  labs(x="Average Temp",y="Number of days", title="Daily Average Temperatures in degrees F from Chicago in 2016-2017") 
+```
+The graph seems to be left-skewed, with the bars being higher on the right side of the graph. The center might be around 45. I would say the data is spread out greatly from the center. This graph seems to be suggesting that the higher the temperature the more common that temperature is. I guess I do wonder a little bit why that is the case.
+
+12. Make a histogram of avg_wind. Adjust the numbers of bins to make a better looking graph. Describe the graph. What do you wonder? Comment on what this graph tells us about wind speed in mph. What's the center? Would you describe the graph as symmetric or skewed? Why? Is this data spread out greatly from the center or is it close?
+
+
+```{r}
+ggplot(data = CWeather, mapping = aes( x = avg_wind)) +
+  geom_histogram(bins=25)
+```
+
+The graph seems to be right-skewed, with the bars being higher on the left side of the graph. The center might be around 9. I would say most of the data is near the center. This graph seems to suggest that wind speed is pretty consistent most of the time. I'm a little curious as to what the high outliers represent like whether they come from stormy weather for example.
+
+
+13. Make a histogram of avg_humidity. Adjust the numbers of bins to make a better looking graph. Describe the graph. What do you wonder? Comment on what this graph tells us about the percentage of humidity. What's the center? Would you describe the graph as symmetric or skewed? Why? Is this data spread out greatly from the center or is it close?  
+
+```{r}
+ggplot(data = CWeather, mapping = aes( x = avg_humidity)) +
+  geom_histogram(bins=15)
+```
+
+The graph seems to be mostly symmetric, maybe a little left-skewed, with the bell shape being a bit to the right of the graph. The center might be around 70. I would say the data is pretty close to the center. Like the graph on avg_wind this graph seems to suggest that humidity is pretty consistent most of the time. I'm a little curious as to what the low outliers represent; extreme weather events maybe?
+
+14. Here is a graph of avg_temp faceted by month.  Describe the graph. What do you wonder? Comment on what this graph tells us about temperatures in months. Anything unexpected?
+
+```{r}
+ggplot(data = CWeather, 
+       mapping = aes( x = avg_temp)) +
+  geom_histogram(bins=15)+labs(x="Average Temp",y="Number of days", title="Daily Average Temperatures in degrees F from Chicago in 2016-2017") +facet_wrap(~month)
+```
+
+As one might expect winter months tend to center around lower temperatures, with the distributions nudging right towards higher temperatures as we get into the middle of the year. I guess I'm a little surprised that March seems to have a more middle of the range distribution than months like June and July, but that may somewhat track with what I saw in the histogram of avg_temp earlier.
+
+15. Facet one of the scatterplots by month.  Describe the graph. What do you wonder? Comment on what the graphs tell you about different months.
+```{r}
+ggplot(data=CWeather, mapping=aes(x=high_temp, y=avg_temp))+
+  geom_point()+
+  facet_wrap(~month)
+```
+The positive linear correlation of the original scatterplot of high_temp and avg_temp is preserved but the winter months show more points on the left part of the line while the warmer months have more points in the middle or to the right. I wonder why colder months appear to have less clustered data points.
+
+16. Facet a different histogram by month.  Describe the graph.  What do you wonder? Comment on what the graphs tell you about different months.
+
+```{r}
+ggplot(data = CWeather, mapping = aes( x = avg_humidity)) +
+  geom_histogram(bins=15)+
+  facet_wrap(~month)
+```
+
+Summer months seem to have distributions with data relatively close to the center while other months have a greater spread. I wonder why the distribution of humidity doesn't seem to change as much month by month compared to the distribution of temperature.

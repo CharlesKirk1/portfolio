@@ -1,0 +1,271 @@
+---
+title: "Visualization part 2 and Wrangling Exercises"
+author: "Charley Kirk"
+date: "8/28/2024"
+output:
+  word_document: default
+  html_document: default
+---
+
+
+ModernDive is under a [Creative Commons Attribution - NonCommercial - ShareAlike 4.0 license](https://creativecommons.org/licenses/by-nc-sa/4.0/) so it is able to be modified with attribution as above. These are exercises based partially on the Learning Checks in ModernDive. 
+
+library load
+```{r setup, message = FALSE}
+library(tidyverse)
+library(mosaicData)
+library(Lock5Data)
+```
+
+Data for this assignment. 
+```{r}
+CWeather=Weather %>% filter(city=="Chicago")
+
+#ignore this one, it is needed because the data is grouped in the original file.
+CWeather=ungroup(CWeather)
+```
+
+More Visualization
+
+1. Here is a boxplot of avg_windspeed. Describe the graph. What do you wonder? What does this tell you about windspeed and months?
+
+```{r}
+ggplot(data = CWeather, 
+       mapping = aes( y = avg_wind, x=as.factor(month))) +
+  geom_boxplot()+labs(y="Average Windspeed",x="Month", title="Daily Average Windspeed in miles per hour from Chicago in 2016-2017")
+
+```
+There's a boxplot for each month; summer months seem to have lower windspeeds if I'm interpreting the graph correctly, and only the months January, September and December have dots (outliers). I'm not sure why summer months seem to have lower windspeeds since I kind of thought higher temperatures were what drove windspeed.
+
+2. What is the as.factor(month) doing for the graph?
+
+The as.factor(month) is causing the month variable to be treated as a factor so it gets accepted by the x aesthetic, which in the context of a graph of boxplots is typically meant for categorical variables and not numerical values.
+
+3. What does the dot on top of the January (1) box mean? Why is it a dot?
+
+The dot on top of the January box refers to one or more high outliers; that is, it represents one or more average wind speeds that are more than 1.5 times the height of the interquartile range above the top of the box. I say one or more in case outliers are being overplotted. Outliers are dots so that they stand out from the rest of the boxplot they correspond to.
+
+4. Which month has the lowest median windspeed? How did you find this?
+
+```{r}
+CWeather%>%
+  group_by(month)%>%
+  summarise(med_avg=median(avg_wind))%>%
+  arrange(med_avg)
+```
+
+Technically you can't find median windspeeds from this data, just the high wind speed for each day, the average wind speed for each day and the low wind speed for each day. If I'm not mistaken each boxplot in the graph above shows the median average wind speed for each month not the median wind speed for each month. But I found that August has the lowest median average wind speed by grouping by month, using summarise to get the median average wind speeds and then arranging those medians in ascending order.
+
+
+5. Which month has the largest interquartile range? How did you check this?
+
+```{r}
+CWeather%>%
+  group_by(month)%>%
+  summarise(IQR=IQR(avg_wind))%>%
+  arrange(desc(IQR))
+```
+
+March has the largest IQR; I figured this out by grouping by month, using summarise to find the IQRs for avg_wind and then arranging the IQRs in descending order.
+
+6. Make a different boxplot by month. Describe the graph. What do you wonder? What does this tell you about your variable?
+
+```{r}
+ggplot(data = CWeather, 
+       mapping = aes( y = avg_hg, x=as.factor(month))) +
+  geom_boxplot()
+```
+
+There is a boxplot of avg_hg (average sea level pressure) for each month. It seems like colder months may have higher sea level pressure for some reason.
+
+For categorical variables we will use the StudentSurvey data set. It is data from college students in introductory statistics courses from Lock5Data library associated with Statistics: Unlocking the Power of Data by Lock, Lock, Lock-Morgan, Lock and Lock. You can type the data set name into the Help tab to find out more about the variables.
+
+```{r}
+glimpse(StudentSurvey)
+```
+
+
+7. Here is a barchart for whether the student reports smoking or not, Smoke. Describe the graph.
+
+
+
+```{r}
+ggplot(data = StudentSurvey, 
+       mapping = aes( x = Smoke)) +
+  geom_bar()+labs(y="Number of Students",x="Smoke", title="Smoking Status of Students in Introductory Statistics Courses")
+```
+
+The graph has two bars, one bar for No and one bar for Yes. No has a count of more than 300 and Yes has a count of less than 50. 
+
+8. Why are we using geom_bar rather than geom_col? When would we use geom_col?
+
+We are using geom_bar because the data is not already pre-summarized. If the data were pre-summarized, there might be a column for the count of No and the count of Yes and we would use geom_col in that situation.
+
+9. Make a bar chart for Award. Describe the graph.
+
+```{r}
+ggplot(data = StudentSurvey, 
+       mapping = aes(x = Award)) +
+  geom_bar()
+```
+
+There is a bar for Academy, a bar for Nobel and a bar for Olympic, and the bars are intentionally or unintentionally in order of increasing height with Academy first having a count between 25 and 50, Nobel second having a count of approximately 150 and Olympic third having a count above 175.
+
+10.  Here is a stacked/segmented bar chart, a side-by-side/dodged bar chart, and faceted bar chart for Smoke versus Sex.  What do you see about the relationship between Smoke and Sex in this graph? Are any of the graph types easier or harder to see the relationships for this data?
+
+stacked/segmented
+```{r}
+ggplot(data = StudentSurvey, mapping = aes( x = Smoke, fill=Sex)) +
+  geom_bar()+
+  labs(y="Number of Students",x="Smoke", 
+       title="Smoking Status by Sex of Students in Introductory Statistics Courses")
+
+```
+
+side-by-side/dodged
+
+```{r}
+ggplot(data = StudentSurvey,mapping = aes( x = Smoke, fill=Sex)) +
+  geom_bar(position="dodge")+
+  labs(y="Number of Students",x="Smoke", 
+       title="Smoking Status by Sex of Students in Introductory Statistics Courses")
+
+```
+
+faceted
+
+```{r}
+ggplot(data = StudentSurvey, mapping = aes( x = Smoke)) +
+  geom_bar()+
+  labs(y="Number of Students",x="Smoke", 
+       title="Smoking Status by Sex of Students in Introductory Statistics Courses")+
+  facet_wrap(~Sex)
+
+```
+Out of the three graphs I think the side-by-side barchart best displays what we are interested in as it clearly shows not just the count of men who said yes, woman who said no etc., but the relative proportions of men vs. women and yes vs. no. With the stacked chart it's harder to directly compare the female no count with the female yes count and with the faceted graph the bars seem farther apart making direct comparison less convenient.
+
+11. Make a stacked or side-by-side or faceted bar chart of Award by Sex. What do you see about the relationship between award and sex in this graph?
+
+```{r}
+ggplot(data = StudentSurvey,mapping = aes( x = Award, fill=Sex)) +
+  geom_bar(position="dodge")
+```
+
+```{r}
+?StudentSurvey
+```
+
+This graph could suggest that women prefer more intellectual or studious awards and men prefer more physically involved awards.
+
+12. Take another look at the code that made the data set CWeather.  What is the code doing? How is the pipe, %>% , being used?
+
+```{r}
+CWeather=Weather %>% 
+  filter(city=="Chicago")
+
+
+```
+
+The pipe is being used to nest the Weather data frame inside the filter function so the filter function can isolate the rows in Weather that correspond to Chicago.
+
+13. Manipulate the code in 12 to pick the city, Mumbai. Give the dataset a new name and examine it. Create at least one scatterplot and one bargraph of variables in the data.
+
+```{r}
+MWeather=Weather %>% 
+  filter(city=="Mumbai")
+MWeather
+```
+
+```{r}
+MWeather%>%
+  ggplot(aes(high_temp, avg_temp))+
+  geom_point()
+```
+
+```{r}
+MWeather%>%
+  group_by(month)%>%
+  summarise(mean_high_wind=mean(high_wind))%>%
+  ggplot(aes(as.factor(month), mean_high_wind))+
+  geom_col()
+```
+
+14. Manipulate the code in 12 to pick any city that is not Chicago nor Mumbai. Give the dataset a new name. Repeat your graphs from above with your new city.
+
+
+```{r}
+AWeather=Weather %>% 
+  filter(city=="Auckland")
+```
+
+```{r}
+AWeather%>%
+  ggplot(aes(high_temp, avg_temp))+
+  geom_point()
+```
+
+```{r}
+AWeather%>%
+  group_by(month)%>%
+  summarise(mean_high_wind=mean(high_wind))%>%
+  ggplot(aes(as.factor(month), mean_high_wind))+
+  geom_col()
+```
+
+15. Here is code that computes the mean(average), median, and standard deviation for Chicago's average temperature, avg_temp.  How does this compare to your guesses of center and spread on this histogram of avg_temp on the previous assignment (Number 11)?
+
+```{r}
+CWeather %>%
+  summarize("Average Average Temp"=mean(avg_temp, na.rm=TRUE), 
+            "Median Average Temp"=median(avg_temp, na.rm=TRUE),
+            "Standard Deviation of Average Temp"=sd(avg_temp, na.rm=TRUE))
+```
+
+```{r}
+CWeather %>%
+  filter(avg_temp<(mean(avg_temp, na.rm=TRUE)-(2.5*sd(avg_temp, na.rm=TRUE))))
+```
+
+
+I was a bit off, with the center being closer to 53 than 45. But there were bars of the histogram which seemed like they may have had low outliers that were more than 2.5 times the standard deviation away from the mean and the R chunk I ran above seems to confirm that. So I wasn't necessarily wrong in saying that the graph seemed to be left-skewed.
+
+16. Why is na.rm=TRUE in the commands?
+
+R doesn't automatically remove NAs from the mean(), median() and sd() functions; this is so the user is aware of whether or not NAs are present. na.rm=TRUE is in the commands so that NAs actually get removed and the functions don't fail.
+
+17. What is the difference between a mean and a median in general? Look in appendix A.1 if you need definitions. Why is the median near but higher than the mean for avg_temp?
+
+The mean could be said to be more descriptive of the data as a whole because it's computed from the values of all the data points whereas the median is found by arranging the data values in numerical order and taking the value in the middle of the arrangement. The median is near the mean because both describe the center of the distribution but the mean's value is lowered by the presence of low outliers in the data.
+
+18. Here is code that computes the average, median, and standard deviation for Chicago's average temperature, avg_temp by month. How does this compare to the graph of avg_temp by month from the previous assignment (Number 14)? Any surprises?
+```{r}
+CWeather %>%
+  group_by(month) %>%
+summarize( "Average Average Temp"= mean(avg_temp, na.rm=TRUE),
+           "Median Average Temp"=median(avg_temp, na.rm=TRUE), 
+           "Standard Deviation of Average Temp"=sd(avg_temp, 
+                                                   na.rm=TRUE))
+```
+
+It seems to correspond pretty well to the faceted graph. I don't see anything new that surprises me.
+
+19. Manipulate the code in 15 to add count of cases n() to your table.
+```{r}
+CWeather %>%
+  summarize("Average Average Temp"=mean(avg_temp, na.rm=TRUE), 
+            "Median Average Temp"=median(avg_temp, na.rm=TRUE),
+            "Standard Deviation of Average Temp"=sd(avg_temp, na.rm=TRUE),
+            "Count of Cases"=n())
+```
+
+
+20.  Manipulate the code in 18. to use the Weather data and group_by city.  What do you see and what do you wonder about these numbers?
+```{r}
+Weather %>%
+  group_by(city) %>%
+summarize( "Average Average Temp"= mean(avg_temp, na.rm=TRUE),
+           "Median Average Temp"=median(avg_temp, na.rm=TRUE), 
+           "Standard Deviation of Average Temp"=sd(avg_temp, 
+                                                   na.rm=TRUE))
+```
+I see the average and median avg_temp for 5 cities. I notice that average temp seems generally lower for Chicago compared to the other four cities so it's possible some of the previous graphs aren't the best reflection of temperature distributions on a general scale since they're mostly if not entirely based on weather in Chicago.

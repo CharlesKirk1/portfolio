@@ -1,0 +1,286 @@
+---
+title: "Bootstrapping and Theoretical Confidence Interval Examples"
+author: "Kim Roth"
+date: "5/11/2020"
+output: html_document
+---
+
+Here are some examples of bootstrapping to generate confidence intervals and some theoretical examples. These examples were originally based on https://cran.r-project.org/web/packages/mosaic/vignettes/Resampling.pdf by Danny Kaplan, Nick Horton,and Randy Prium. We will use the syntax of ModernDive rather than mosaic.
+
+First load the libraries
+```{r, results=FALSE}
+library(mosaic) #the mosaic library
+library(Lock5Data) #the data storage location.
+library(tidyverse) #for ggplot.
+library(moderndive) #for its data
+library(infer)#for some of the bootstrap stuff
+```
+#One proportion
+
+Reese's Pieces
+___
+  There were 52 out of 100 Reese's pieces that were orange
+
+First I am going to read in data that matches this, which I made in a google doc.
+
+```{r}
+Reeses<-read_csv("https://docs.google.com/spreadsheets/d/1zbqATwGT1UhVED8bHce4JQOCbhX02gwD-RvGgPfofwc/export?format=csv")
+Reeses
+ggplot(data=Reeses, mapping=aes(x=Color))+geom_bar()
+```
+For demonstration purposes,let's do only one first. Why is the size 100?
+```{r}
+
+oneBoot=Reeses %>% 
+  rep_sample_n(size = 100, reps = 1, replace = TRUE)
+ggplot(data=oneBoot, mapping=aes(x=Color))+geom_bar()
+```
+
+Now lots
+```{r}
+bootSamples=Reeses %>% rep_sample_n(size = 100, reps = 1000, replace = TRUE) #this makes the bootstrap 1000 times
+bootSamples
+```
+ Now calculate the boostrap statistic/point estimate for each sample
+```{r}
+bootDist <- bootSamples %>% 
+  group_by(replicate) %>% 
+  summarize(boot_stat = mean(Color=="Orange"))
+bootDist
+```
+ 
+Now let's look at the whole bootstrap distribution
+```{r}
+ggplot(data=bootDist, mapping=aes(x=boot_stat))+geom_histogram(bins=10)
+```
+##95% Bootstrap Interval (original way)
+Now let's make the 95% (normal) bootstrap confidence interval
+```{r}
+bootDist %>% 
+  summarize(mean = mean(boot_stat), 
+            se = sd(boot_stat), 
+            lower_ci = mean - (1.96 * se), 
+            upper_ci = mean + (1.96 * se))
+```
+
+##95% percentile interval(original way)
+To make the 95% percentile interval we use the command quantile
+
+```{r}
+bootDist%>% 
+  summarize(lower_ci = quantile(boot_stat, 0.025), 
+            upper_ci = quantile(boot_stat, 0.975))
+
+```
+#infer package
+To do the boostrap using the infer package. It will be easier to use in some of the later situations, so we'll use it with the other examples
+
+##Bootstrap distribution (infer way)
+Using specify-> generate-> calculate
+
+```{r}
+bootDist=Reeses %>% specify(response=Color, success="Orange") %>% generate(reps=1000, type="bootstrap") %>% calculate(stat="prop")
+visualize(bootDist)
+```
+
+##95% Bootstrap Interval (infer way)
+Now let's make the 95% (normal) bootstrap confidence interval
+```{r}
+point_est=mean(Reeses$Color=="Orange")
+point_est
+standard_error_ci <- bootDist %>% 
+  get_confidence_interval(type = "se",level=.95, point_estimate = point_est)
+standard_error_ci #level defaults to 95%, but is listed here so you can change it if you'd like
+```
+
+```{r}
+visualize( bootDist) + 
+  shade_confidence_interval(endpoints = standard_error_ci)
+```
+
+##95% percentile interval(infer way)
+To make the 95% percentile interval we use the command quantile
+
+```{r}
+ percentile_ci <-bootDist%>% 
+  get_confidence_interval(level = 0.95, type = "percentile")
+percentile_ci
+visualize( bootDist) + 
+  shade_confidence_interval(endpoints = percentile_ci)
+```
+
+
+##Theoretical Confidence Interval for a proportion (z-interval)
+To do with a theoretical formula for a proportion, your need a large sample size (number of sucesses and failures bigger than 10, with 52 success (Orange) and 48 failures (Not Orange) here we are fine. This guarantees by the Central Limit theorem the theoretical normal distribution(z) matches the actual sampling distribution well enough 
+
+Here is the confidence interval code. 
+```{r}
+binom.test(52, 100, conf.level=.95)$conf #the 52 and 100 are the number of sucesses and sample size
+```
+
+#One mean
+We will use BodyTemp50, which is 50 measurements from a sample of college students and look at BodyTemp-oral body temperature in degrees Farenheight. This data is from Statistics:Unlocking the Power of Data from Lock et. al.
+```{r}
+BodyTemp50
+ggplot(data=BodyTemp50, mapping=aes(x=BodyTemp))+geom_histogram(bins=10)
+```
+##Bootstrap for one mean with infer
+
+```{r}
+bootDistTemp=BodyTemp50 %>% specify(response=BodyTemp) %>% generate(reps=1000, type="bootstrap") %>% calculate(stat="mean")
+visualize(bootDistTemp)
+```
+##Bootstrap (Normal) Confidence interval for one mean with infer
+
+```{r}
+point_est=mean(BodyTemp50$BodyTemp)
+point_est
+standard_error_ci <- bootDistTemp %>% 
+  get_confidence_interval(type = "se",level=.95, point_estimate = point_est)
+standard_error_ci #level defaults to 95%, but is listed here so you can change it if you'd like
+visualize( bootDistTemp) + 
+  shade_confidence_interval(endpoints = standard_error_ci)
+```
+## Percentile Bootstrap Interval for one mean with infer
+```{r}
+
+percentile_ci <- bootDistTemp %>% 
+  get_confidence_interval(type = "percentile",level=.95)
+standard_error_ci #level defaults to 95%, but is listed here so you can change it if you'd like
+visualize( bootDistTemp) + 
+  shade_confidence_interval(endpoints = percentile_ci)
+```
+##Theoretical confidence interval for a single mean
+
+The assumptions are either large sample size for each group (larger than 30 is probably okay, larger than 50 is safer) or the data is normally distributed. These samples are large enough, but we'll make a graph for practice. 
+
+```{r}
+ggplot(data=BodyTemp50, mapping=aes(x=BodyTemp))+geom_histogram(bins=10)
+```
+Reasonably symmetric even if there is an outlier. Graph is bell shaped enough.
+
+```{r}
+t.test(BodyTemp50$BodyTemp, conf.level=.95)$conf  
+```
+
+#Two means
+
+Tea vs. Coffee for InterferonGamma Level -Two means
+___
+Here is the problem this data is from Statistics:Unlocking the Power of Data from Lock et. al.
+
+"Researchers suspect that drinking tea might enhance the production of interferon gamma, a molecule that helps the immune system fight bacteria, viruses, and tumors. A recent study involved 21 healthy people who did not normally drink tea or coffee. Eleven of the participants were randomly assigned to drink five or six cups of tea a day, while 10 were asked to drink the same amount of coffee. After two weeks, blood samples were exposed to an antigen and production of interferon gamma was measured The results are shown are available in ImmuneTea. We are interested in estimating the effect size, the increase in average interferon gamma production for drinking tea when compared to coffee."" 
+
+This is a difference in two means. The order is up to you.
+
+```{r}
+ImmuneTea
+ImmuneTea %>% group_by(Drink) %>% summarize(mean=mean(InterferonGamma))
+```
+We will use the difference as a point estimate. Pick your order of subtraction and stick with it.
+```{r}
+meanDiff=17.70000-34.81818	
+meanDiff
+
+#or could use the following from infer just taking the bootstap language and leaving out the generate step. Here commented out
+meanDiff <- ImmuneTea %>% 
+  specify(formula = InterferonGamma~ Drink) %>% 
+  # generate(reps = 1000, type = "bootstrap") %>% 
+  calculate(stat = "diff in means", order = c("Coffee", "Tea"))
+```
+What does it tell you that it is negative?
+
+##Bootstrap with infer
+
+```{r}
+bootDistTea = ImmuneTea %>%   specify(formula= InterferonGamma~Drink) %>%generate(reps=1000) %>% calculate(stat = "diff in means", order = c("Coffee","Tea")) #does coffee-tea      
+bootDistTea
+visualize(bootDistTea)
+```
+##Bootstrap (normal) interval difference of Two means
+Let's make a 99% confidence interval for a change. That's not uncommon in medical testing 
+```{r}
+standard_error_ci <- bootDistTea %>% 
+  get_confidence_interval(type = "se",level=.99, point_estimate = meanDiff)
+standard_error_ci 
+visualize( bootDistTea ) + 
+  shade_confidence_interval(endpoints = standard_error_ci)
+```
+##Bootstrap percentile interval difference of Two means
+```{r}
+percentile_ci <- bootDistTea %>% 
+  get_confidence_interval(type = "percentile",level=.99)
+percentile_ci 
+visualize( bootDistTea ) + 
+  shade_confidence_interval(endpoints = percentile_ci)
+```
+
+##Theoretical interval for difference of Two means
+
+The assumptions are the same here as for one mean. Either large sample size for each group (larger than 30 is probably okay, larger than 50 is safer) or the data is normally distributed. These samples are too small so we'll make a graph.  If you assume they have equal spread you have to check the standard deviations are not more than twice each other as well.
+```{r}
+ggplot(data=ImmuneTea, mapping=aes(x=InterferonGamma))+geom_histogram(bins=3)+facet_wrap(~Drink)
+```
+This is not great, but it is not horribly skew. We will proceed with caution (and knowing the bootstrap was relatively bell shaped, which is another way to check)
+```{r}
+t.test(InterferonGamma~Drink, data=ImmuneTea, conf.level=.99)$conf  #book would probably do var.equal=TRUE as well
+```
+
+#Two Proportions
+
+Mythbusters yawn example from section 3.8 of ModernDive. See book for more details.
+
+```{r}
+mythbusters_yawn
+mythbusters_yawn %>% 
+  group_by(group, yawn) %>% 
+  summarize(count = n())
+```
+## Bootstrap for difference in proportions using infer
+```{r}
+bootstrap_distribution_yawning <- mythbusters_yawn %>% 
+  specify(formula = yawn ~ group, success = "yes") %>% 
+  generate(reps = 1000, type = "bootstrap") %>% 
+  calculate(stat = "diff in props", order = c("seed", "control"))
+visualize(bootstrap_distribution_yawning)
+
+```
+##Bootstrap (normal) confidence interval for difference in proportions using infer
+```{r}
+obs_diff_in_props <- mythbusters_yawn %>% 
+  specify(formula = yawn ~ group, success = "yes") %>% 
+  # generate(reps = 1000, type = "bootstrap") %>% 
+  calculate(stat = "diff in props", order = c("seed", "control"))
+obs_diff_in_props
+myth_ci_se <- bootstrap_distribution_yawning %>% 
+  get_confidence_interval(type = "se", point_estimate = obs_diff_in_props)
+myth_ci_se
+```
+
+##Percentile bootstrap confidence interval for difference in proportions using infer
+
+```{r}
+bootstrap_distribution_yawning %>% 
+  get_confidence_interval(type = "percentile", level = 0.95)
+```
+#Theoretical interval for difference in two proportions (2 prop)
+This requires that the number of "sucesses" which is yawn and failures are bigger than 10 in both groups. We should not use this method here and this is included only for reference.
+
+```{r}
+prop.test (c(4,10), c(16, 34), conf.level = .95)$conf #those are from 4/16 on control and 10/34 on seed
+```
+
+
+#Bootstrap for other parameters
+
+It is possible to make bootstraps for some other parameters like slope of a regression line (remember in the tables), correlation, standard deviation, and variance all using these methods. Not so for median and most other parameters involving order, which require order statistics instead.
+
+
+Just so you can see why. Remember bootstrap distributions need to be bell shaped
+```{r}
+bootDistTemp=BodyTemp50 %>% specify(response=BodyTemp) %>% generate(reps=1000, type="bootstrap") %>% calculate(stat="median")
+visualize(bootDistTemp)
+```
+
+Not very bell shaped. It really has to be pretty bell shaped here, not just symmetric.
+

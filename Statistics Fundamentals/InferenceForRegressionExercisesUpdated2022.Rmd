@@ -1,0 +1,314 @@
+---
+title: "Inference for Regression Exercises"
+author: "Charley Kirk"
+date: "11/13/2024"
+output:
+  word_document: default
+  pdf_document: default
+  html_document: default
+---
+
+
+ModernDive is under a [Creative Commons Attribution - NonCommercial - ShareAlike 4.0 license](https://creativecommons.org/licenses/by-nc-sa/4.0/) so it is able to be modified with attribution as above. These are exercises based partially on the Learning Checks in ModernDive. 
+
+This assignment is based on one by Albert Kim and Jenny Smetzer designed to accompany the book.  
+
+# Setup
+
+## Libraries
+```{r}
+library(tidyverse) #ggplot, etc
+library(moderndive) #the pretty regression tools
+library(infer) #for inference
+library(fueleconomy)
+vehicles=fueleconomy::vehicles #the data set
+```
+
+## R chunk settings. Don't worry about this code.
+```{r, include=FALSE}
+# Do not edit this code block/chunk!
+knitr::opts_chunk$set(
+  echo = TRUE, message=FALSE, warning = FALSE, fig.width = 16/2, 
+  fig.height = 9/2
+)
+```
+
+
+
+## Background 
+These examples will be the same as the ones from simple and multiple regression exercises, but now instead of just making models, we will do inference with them.
+
+We will look at data from the fueleconomy package about cars. The details about the variables can be found here. 
+https://cran.r-project.org/web/packages/fueleconomy/fueleconomy.pdf
+
+Since it is a large data set, we'll use the most recent model year in the data set which is 2015. 
+
+```{r}
+vehicles2015<-vehicles%>%
+  filter(year==2015)
+vehicles2015
+```
+
+  This activity will focus on the relationships among several of these variables including:
+
+	cty = EPA's estimated miles per gallon for city driving
+	hwy = EPA's estimated miles per gallon for highway driving
+	cyl = number of cylinders in engine, larger engines have more cylinders
+	displ = displacement of engine in liters, larger engines have more displacement
+
+
+
+# Simple Linear Models and Inference
+Here is a linear model of city mpg as predicted by highway mpg and its tables. Unlike the previous homework, I have chosen not to remove the high outliers (electric cars) this time.
+
+```{r}
+ctyhwy=lm(cty~hwy, data=vehicles2015) #model
+get_regression_table(ctyhwy) #regression table
+summary(ctyhwy)
+
+```
+
+
+## Question 1
+
+**a.** Looking at either the regression table or the summary for the model. Is the model valid? Explain your answer using a p-value and making a conclusion in context.
+
+The p-value for the slope value is given in the regression table to be 0, which tells us that the estimated slope of 1.129 is very unlikely under the null hypothesis that the slope is zero. We conclude that there is a relationship between city mpg and highway mpg and that the model is valid.
+
+**b.** Looking at the regression table, give the 95% confidence interval for the slope and interpret it in context.
+
+95% confidence interval: (1.073, 1.184). We are 95% confident that this interval contains the true slope parameter relating cty and hwy.
+
+
+**c.** Give an interpretation of the R-squared (r^2) value in the context of the model
+
+This model explains 88.72% of the variation in the cty variable.
+
+
+**d.** Looking at context of the data and the graphs of the data and model, the residual plot, and the histogram of residuals. Does the model fit the LINE criteria? Explain.
+
+Since this is the first model here are the graphs to remind you how to create them.
+
+```{r}
+ggplot(data=vehicles2015, mapping=aes(y=cty, x=hwy))+
+  geom_point()+
+  labs(y="City Miles Per Gallon", x="Highway Miles Per Gallon", 
+       title=" City versus Highway mileage for 2015 model vehicles")+
+  geom_smooth(method="lm",se=0) #model
+residualsctyhwy=get_regression_points(ctyhwy)
+ggplot(data=residualsctyhwy,mapping=aes(x=cty_hat,y=residual))+
+  geom_point()+
+  labs(x="Predicted City MPG", y="Residual", 
+       title="Residual plot for City vs Highway MPG") #residual plot
+ggplot(data=residualsctyhwy,mapping=aes(x=residual))+
+  geom_histogram()+
+  labs(y="Count", x="Residual", 
+       title="Residuals for City vs Highway MPG")
+```
+ 
+The model does not fit the LINE criteria. The equality of variance condition is not met because the residual plot shows that the spread of the residuals is not constant across all predicted values of cty. The normality condition is not met because the residual histogram is not bell-shaped.
+
+
+ 
+## Question 2
+ Make a linear model for highway as predicted by displacement and display its tables. Note you can either alter the code up above or go and get your model from the simple regression homework assignment. It's the same model although I have chosen to not remove outliers.  
+ 
+```{r}
+hwydispl=lm(hwy~displ, data=vehicles2015)
+get_regression_table(hwydispl)
+summary(hwydispl)
+```
+
+**a.** Looking at either the regression table or the summary for the model. Is the model valid? Explain your answer using a p-value and making a conclusion in context.
+
+
+The p-value for the slope value is given in the regression table to be 0, which tells us that the estimated slope of -3.046 is very unlikely under the null hypothesis that the slope is zero. We conclude that there is a relationship between hwy and displ and that the model is valid. 
+
+**b.** Looking at the regression table, give the 95% confidence interval for the slope and interpret it in context.
+
+95% confidence interval: (-3.309, -3.046). We are 95% confident that this interval contains the true slope parameter relating hwy and displ.
+
+**c.** Give an interpretation of the R-squared (r^2) value in the context of the model
+
+This model explains 72.04% of the variation in the hwy variable.
+
+
+**d.** Looking at content of the data and the graphs of the data and model, the residual plot, and the histogram of residuals. Does the model fit the LINE criteria? Explain.
+
+```{r}
+ggplot(data=vehicles2015, mapping=aes(y=hwy, x=displ))+
+  geom_point()+
+  geom_smooth(method="lm",se=0)
+residualshwydispl=get_regression_points(hwydispl)
+ggplot(data=residualshwydispl,mapping=aes(x=hwy_hat,y=residual))+
+  geom_point()
+ggplot(data=residualshwydispl,mapping=aes(x=residual))+
+  geom_histogram()
+```
+
+
+The model does not fit the LINE criteria. The equality of variance condition is not met because the residual plot shows that the spread of the residuals is not constant across all predicted values of hwy.
+
+**e.** Was this a good model overall? Why or why not.
+
+Since the model did not meet all the LINE criteria, I would say that the model was not good as we can not reliably use the model for inference.
+
+
+# Categorical predictors
+
+Here is a linear model of highway as predicted by fuel and its tables and its associated graph
+```{r}
+ggplot(data=vehicles2015, mapping=aes(y=hwy,x=fuel))+
+  geom_point()+
+  labs(title="Highway Miles Per Gallon by Fuel Type", 
+       x="Fuel Type Reccomended/Used", y="Highway MPG")
+hwyfuel=lm(hwy~fuel, data=vehicles2015)
+get_regression_table(hwyfuel)
+summary(hwyfuel)
+```
+
+Interestingly enough all the indicator functions have negative slope meaning they are below the overall average for diesel, the only variable which is not an indicator, which makes sense as diesel fuel is generally more efficient.
+
+**a.** Looking at either the regression table or the summary for the model. Is the model valid? Explain your answer using p-values and making a conclusion in context. Remember for categorical variables we consider the slopes as a group and if one is valid,that is sufficient for model validity.
+
+Since there are no interaction terms, calling the estimates in the R output "slopes" might not be accurate. But in the summary output table, "fuelGasoline or E85" has a p-value of 0.00101, which is less than 0.05. So I'll say that this model is valid at a 95% significance level.
+
+**b.** Looking at the regression table, give the 95% confidence interval for the slope of fuelRegular and interpret it in context.
+
+95% confidence interval: (-9.897, 1.757). We are 95% confident that this interval contains the true slope parameter relating hwy and fuelRegular.
+
+**c.** Give an interpretation of the R-squared (r^2) value in the context of the model.
+
+This model explains 55.01% of the variation in the hwy variable.
+
+
+We do not use the LINE criterion in the same way if the predictors are all categorical and so we will not use it here and leave it to Multivariate Techniques.
+
+**d**. Was this a good model overall? Why or why not.
+
+I guess I'd say this was a bad model overall. The R-squared value of 0.5501 could be better.
+
+
+
+## Question 4
+Make a linear model of city mpg as predicted by drive and its associated graph and tables.
+
+```{r}
+ggplot(data=vehicles2015, mapping=aes(y=cty,x=drive))+
+  geom_point()
+ctydrive=lm(cty~drive, data=vehicles2015)
+get_regression_table(ctydrive)
+summary(ctydrive)
+```
+
+**a.** Looking at either the regression table or the summary for the model. Is the model valid? Explain your answer using p-values and making a conclusion in context. Remember for categorical variables we consider the slopes as a group and if one is valid, that is sufficient for model validity.
+
+Again, since there are no interaction terms calling the estimates in the R output "slopes" might not be correct but I'll say that since "driveFront-Wheel Drive" has a p-value of 5.44e-06, which is less than 0.05, this model is valid at a 95% significance level.
+
+**b.** Looking at the regression table, give the 95% confidence interval for the slope of Front-Wheel Drive and interpret it in context.
+
+95% confidence interval: (6.079,	14.955). We are 95% confident that this interval contains the true slope parameter relating cty and Front-Wheel Drive.
+
+
+**c.** Give an interpretation of the R-squared (r^2) value in the context of the model.
+
+This model explains 22.03% of the variation in the hwy variable.
+
+
+**d**. Was this a good model overall? Why or why not.
+
+I'd probably say this was a bad model overall. The R-squared value of 0.2203 is even worse than the R-squared value in the last model.
+
+# Mutliple Regression Inference
+
+This is one of the data sets and models from the Multiple Inference homework
+
+Wildlife biologists are interested in managing/protecting habitats for a declining species of vole, but are not sure about what habitats it prefers. Two things that biologists can easily control with management is percent cover of vegetation, and where habitat improvements occur (i.e. is it important to create/protect habitat in moist or dry sites, etc). To help inform habitat management of this vole species, the researchers in this study counted the number of `voles` at 56 random study sites. At each site, they measured percent cover of  `veg`etation, and recorded whether a site had moist or dry `soil`. 
+
+The data can be read in like so
+
+```{r}
+vole_trapping <- read_csv("http://bit.ly/2IgDF0E")
+```
+
+The data contains the variables: 
+
+* `site` for the id of each random study site (each case or row is a survey/trapping site)
+* `voles` for the vole count at each site
+* `veg` for the percent cover of vegetation at each site
+* `soil` identifying a site as "moist" or "dry"
+
+# Question 5
+
+Generate a regression model with `voles` as the response variable `y` and `veg` and `soil` as explanatory variables and its tables. Also make a graph of the explanatory variables vs. the predicted variable used.
+
+**Answer:** 
+```{r}
+vole_model <- lm(voles ~ veg * soil, data = vole_trapping)
+ggplot(data = vole_trapping, aes(y = voles, x = veg, color=soil)) +
+  geom_point()+ 
+  geom_smooth(method = "lm", se = FALSE)
+get_regression_points(vole_model)
+get_regression_table(vole_model)
+summary(vole_model)
+```
+
+**a.** Looking at either the regression table or the summary for the model. Should we be including the `veg` variable in the model? Explain using the p-value.
+
+We should include the veg variable in the model if we are conducting a hypothesis test with a 95% significance level because veg's coefficient estimate has a p-value of 0.00119 which is less than 0.05.
+
+**b.** Looking at either the regression table or the summary for the model. Should we be including the `soil` variable in the model? Explain using the p-value.
+
+Both soilmoist and veg:soilmoist have corresponding p-values that are above 0.05, so at least one of the two terms with soil could likely be removed from the model.
+
+**c.** Looking at the regression table, give the 95% confidence interval for the slope of `veg` and interpret it in context.
+
+95% confidence interval: (11.777,	24.229). We are 95% confident that this interval contains the true slope parameter relating voles and veg.
+
+**d. ** Give an interpretation of the R-squared (r^2) value in the context of the model.
+
+This model explains 58.2% of the variation in the voles variable.
+
+
+**e.** Looking at context of the data and the graphs of the data and model, the residual plot, and the histogram of residuals. Does the model fit the LINE criteria? Explain.
+
+```{r}
+vole_trapping%>%
+  filter(is.na(soil)==FALSE)%>%
+  ggplot(aes(veg, voles, color=soil))+
+  geom_point()+
+  geom_smooth(method= "lm", se=FALSE)+
+  facet_wrap(~soil)
+```
+The relationship on the right looks more linear than the one on the left, but the one on the left at least doesn't have an obviously nonlinear relationship.
+
+Regarding independence, we can see based on the background information provided that there is exactly one row in the original dataset for each of 56 random study sites.
+
+
+```{r}
+get_regression_points(vole_model)%>%
+  ggplot(aes(residual))+
+  geom_histogram()+
+  facet_wrap(~soil)
+```
+These histograms look to be relatively bell-shaped and centered on zero.
+
+
+```{r}
+get_regression_points(vole_model)%>%
+  ggplot(aes(veg, residual))+
+  geom_point()+
+  geom_hline(yintercept = 0, col = "blue", size = 1)+
+  facet_wrap(~soil)
+```
+I would say the spread of the residuals looks consistent enough.
+
+Based on these results we can say that the model meets the LINE criteria.
+
+**f.** Was this a good model overall? Why or why not.
+
+I didn't write the answer below, it was already pasted under this question when I looked. I would have probably said pretty much the same thing though in maybe not exactly the same words.
+
+Yes, overall it was a good model. The r^2 is fairly high and the residual criteria LINE are all met.
+
+

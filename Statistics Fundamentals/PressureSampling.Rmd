@@ -1,0 +1,45 @@
+---
+title: "PressureSampling"
+author: "Charles Kirk"
+date: "2024-10-25"
+output: word_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(ggplot2)
+library(dplyr)
+library(forcats)
+library(moderndive)
+library(tidyverse)
+library(readr)
+```
+
+```{r}
+presdat <- read_csv("~/Dropbox/Charley/Juniata/Data Science Masters/Statistics Fundamentals/CleanBloodpressuredata.csv")%>%
+  select(-Date, -REC)
+presdat
+```
+
+1) What is the population of interest?
+
+The population of interest is the attendees of the Huntingdon County Fair.
+
+2) What questions do you have about your intended population you are hoping to answer with your data?
+
+Among potentially other things I might be interested to know whether men or women are more likely to be considered overweight and what the relationship is between age and hypertension. Of course for this project there's also some emphasis on samples and confidence intervals and I suppose attributes like BPRatio and Age could be potential candidates for making sample parameters, as well as confidence intervals and hypothesis tests for population parameters.
+
+3) How will you sample? If it is from a data set, I will need to know what data set is and how. If it from a small available population, I will need to know how you will sample and if it involves a questionnaire I will need the questions.
+
+I will probably make samples without replacement using the rep_sample_n() function we learned about in this course with set seeds so the results can be replicated for anyone else who downloads the rmd. This dataset comes from an assignment in Data Science Fundamentals where we cleaned up a dataset of data on fair attendees. The data I used to create the presdat dataframe is a cleaned csv version of the Bloodpressuredata.xlsx document from that assignment. I believe the original source was given to be JC Blair Hospital, apparently renamed Penn Highlands Huntingdon. The hospital collected this data from people at the Huntingdon County Fair. The data may have been collected by survey but I don't think I have access to the original survey questions.
+
+A couple notes: Dr. Shrager, since you were my instructor for Data Science Fundamentals I decided I probably didn't need to reshow the cleaning work I did for the data the first time, but if you want me to I could probably start with the original excel file and paste the code for all the data cleaning, it would just take up more space. Actually my first choice was going to be to just use the pokemon data again but I chose this data because I didn't already use it in a project.
+
+4) What variables are included in your sample? For the categorical variables, list the possible levels.
+
+My CleanBloodpressuredata csv contained 19 columns but I selected just 17 for this project, omitting REC and Date.
+
+Variables: OVERALL: Case ID variable. YEAR: The year the individual's data was recorded. BP: The blood pressure of the individual; I think it's computed as Systolic/Diastolic though it may not be directly derived from the Systolic and Diastolic in this dataset. BPRatio:The individual's BP given as a decimal. Systolic: In the HospitalDataCleaning.Rmd document it was described as "the top number in blood pressure." Diastolic: In the HospitalDataCleaning.Rmd document it was described as "the bottom number in blood pressure." BPStatus: Low, Normal, Pre-Hypertension or Hypertension. Age: The age of the individual in years. Weight: The weight of the individual in pounds. HeightInches: The height of the individual in inches. BMI: Computed based on the height and weight of the individual. BMICategory: Normal, Overweight or Obese. Gender: The gender of the individual, with values of M and F. DiagnosedDiabetic: Y if the individual was ever diagnosed with diabetes, N if they were not. TobaccoUser: Y if the individual uses tobacco, N if they do not. OnmedicationforBP: Y if the individual is on medication for high blood pressure, N if they are not. HuntingdonCountyResident: Y if the individual is a resident of Huntingdon County, N if they are not.

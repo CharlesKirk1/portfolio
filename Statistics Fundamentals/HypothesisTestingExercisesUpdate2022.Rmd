@@ -1,0 +1,853 @@
+---
+title: "Hypothesis Testing Exercises"
+author: "Charley Kirk"
+date: "11/7/2024"
+output:
+  word_document: default
+  pdf_document: default
+  html_document: default
+---
+
+
+ModernDive is under a [Creative Commons Attribution - NonCommercial - ShareAlike 4.0 license](https://creativecommons.org/licenses/by-nc-sa/4.0/) so it is able to be modified with attribution as above. 
+
+This assignment for questions 1 and 2 is based on one by Albert Kim and Jenny Smetzer designed to accompany the book. The further questions were adapted by Albert Kim and Jenny Smetzer from OpenIntro [Creative Commons  Attribution-ShareAlike 3.0 Unported](http://creativecommons.org/licenses/by-sa/3.0) by J Smetzer.
+
+
+
+
+```{r, include=FALSE}
+# Do not edit this code block/chunk
+knitr::opts_chunk$set(echo = TRUE, message=FALSE, warning = FALSE, fig.width = 16/2, fig.height = 9/2)
+
+# Set seed value of random number generator to get "replicable" random numbers.
+
+set.seed(76)
+```
+
+
+
+
+# Background {-}
+
+First load the necessary packages:
+
+```{r}
+library(tidyverse)
+library(infer)
+library(readr)
+library(effsize)
+library(mosaic)
+```
+
+For this Problem Set you will work with some grade-point-average (GPA) data for college freshman. The following will read in the data:
+
+```{r}
+sat_gpa <- read_csv("https://rudeboybert.github.io/SDS220/static/PS/sat_gpa.csv")
+glimpse(sat_gpa)
+```
+Each row or case in this data frame is a student. The data includes the (binary) gender of each student; the math, verbal and total SAT scores for each student; the GPA of each student in high school (categorized as "low" or "high"); and the GPA of each student their first year of college on a numeric scale.
+
+We will use hypothesis testing to answer the following questions:
+
+1.  Is there a difference in male and female freshman GPAs?
+2.  Is there a difference in total SAT score for students with a "low" and "high" high-school GPA?
+
+Note, if you get stuck as you are working through this, it will be helpful to go back and read Chapter 10 in ModernDive.
+
+
+
+
+
+# Question 1: Gender differences in first-year GPA
+
+## Exploratory data analysis
+
+#### Q1.
+
+a) Calculate the mean GPA score for each gender, using the `group_by` and `summarize` commands from the `dplyr` package.
+
+```{r}
+sat_gpa%>%
+  group_by(sex)%>%
+  summarize(mean_gpa=mean(gpa_fy))
+```
+
+**Questions**:
+
+1. What is the difference in sample mean GPA's?
+2. Make a guess: are we likely to observe this difference just by chance or is the mean GPA for females higher?
+
+**Answers**:
+
+```{r}
+2.544587-2.396066
+```
+
+The difference in sample mean GPA's is 0.148521. Considering there are 1,000 observations I would say we are rather unlikely to observe this difference by chance.
+
+
+#### Q1.b) 
+
+Create and describe a data visualization that displays the GPAs of the two groups. Be sure to include a title and label your axes. 
+
+```{r}
+sat_gpa%>%
+  ggplot(aes(sex, gpa_fy))+
+  geom_boxplot()+
+  labs(x="Sex", y="GPA Freshman College Year", title = "GPAs of Freshman College Students by Sex")
+```
+
+## Stating a null hypothesis
+
+We will now test the null hypothesis that there's no difference in population mean GPA between the genders at the population level. We can write this out in mathematical notation 
+
+$$\begin{aligned} H_0:&\mu_{male} = \mu_{female} \\\ \mbox{vs }H_A:& \mu_{male} \neq \mu_{female} \end{aligned}$$
+
+or expressed differently, that the difference is 0 or not:
+
+$$\begin{aligned} H_0:&\mu_{male} - \mu_{female} = 0 \\\ \mbox{vs }H_A:& \mu_{male} - \mu_{female} \neq 0 \end{aligned}$$
+
+## Testing the hypothesis
+
+Here's how we use infer to run this hypothesis test:
+
+### Step 1: Calculate the observed difference 
+
+Note that the order we choose does not matter here (female then male)...but since we used `order = c("Female", "Male")` here, we should do the same in subsequent calculations!
+
+```{r}
+obs_diff_gpa_sex <- sat_gpa %>% 
+  specify(gpa_fy ~ sex) %>% 
+  calculate(stat = "diff in means", order = c("Female", "Male"))
+
+obs_diff_gpa_sex
+```
+
+Note that this is the difference in the group means we calculated earlier.
+
+```{r}
+2.544587 - 2.396066
+```
+
+### Step 2. Generate the null distribution of $\delta$, the difference in means
+
+This step involves generating simulated values *as if* we lived in a world where there's no difference between the two groups. Going back to the idea of permutation, and tactile sampling, this is akin to shuffling the GPA scores between male and female labels (i.e. removing the structure to the data) just as we could have done with index cards. 
+
+```{r}
+gpas_in_null_world <- sat_gpa %>% 
+  specify(gpa_fy ~ sex) %>% 
+  hypothesize(null = "independence") %>% 
+  generate(reps = 5000)
+```
+
+#### Q1.c) 
+
+**Questions**:
+
+1. What was the size of the "shuffled" (permuted) sample in each run?
+2. How many times did we do a different "shuffle" (permute) here to the sample? How many rows are in the `gpas_in_null_world` data frame?
+
+**Answers:**
+
+```{r}
+gpas_in_null_world
+```
+
+
+The size of each permuted sample was 1,000, we permuted 5,000 times and there are 5,000,000 rows in the gpas_in_null_world data frame.
+
+
+
+### Step 3. Calculate the differences between male and females under the null
+
+The following calculates the differences in mean GPA for males and females for "shuffled" (permuted) data. 
+
+```{r}
+gpa_diff_under_null <- gpas_in_null_world %>% 
+  calculate(stat = "diff in means", order = c("Female", "Male")) 
+
+gpa_diff_under_null %>% 
+  slice(1:5)
+```
+
+#### Q1.d) 
+
+**Question**:
+
+How many rows are in this data frame? Why?
+
+**Answer:**
+
+```{r}
+gpa_diff_under_null
+```
+
+There are 5,000 rows in this data frame because there is one statistic for each of the 5,000 samples.
+
+
+### Step 4. Visualize how the observed difference compares to the null distribution of $\delta$
+
+The following plots the $\delta$ values we calculated for each of the different "shuffled" replicates. This is the null distribution of $\delta$. The red line shows the observed difference between male and female scores in the data (-0.1485209) from step 1. 
+
+```{r}
+gpa_diff_under_null %>% 
+  visualize()+
+  shade_p_value(obs_stat = obs_diff_gpa_sex,direction="two-sided") +
+  labs(x = "Difference in mean GPA for males and females", y = "Count",
+       title = "Null distribution of differences in male and female GPAs",
+      subtitle = "Actual difference observed in the data is marked in red")
+```
+
+**Note that zero is the center of this null distribution.** The null hypothesis is that there is no difference between males and females in GPA score. In the permutations, zero was the most common value, because all structure was removed from the data...GPA values were sorted into male and female **at random**. Values as large as ~ 0.1 and -0.1 occurred, but much less frequently, because they are just not as likely when structure is removed from the data.  
+
+
+### Step 5: Calculate a p-value
+
+```{r}
+gpa_diff_under_null %>% 
+  get_pvalue(obs_stat = obs_diff_gpa_sex, direction = "both") 
+```
+
+This result indicates that there is a 0.2% chance (very low) chance that we would see a difference of 0.15 (or a bigger) in GPA scores between males and females if in fact there was truly no difference between the sexes in GPA scores at the population level.
+
+#### Q1.e) 
+
+Fill in the blanks below to write up the results & conclusions for this test:
+
+The mean GPA scores for females in our sample ($\bar{x}$ = 2.544587) was greater than that of males ($\bar{x}$ = 2.396066). The p-value was 0.0016 which is less than $\alpha = 0.05$.  Given this I would reject the Null hypothesis and conclude that females have higher GPAs than males at the population level.
+
+I want to mention that we perfomed a two-tailed test not a one-tailed test, so I think we weren't directly considering the evidence in favor of the hypothesis that females have higher GPAs than males but rather the evidence in favor of the hypothsesis that females and males have different GPAs, which isn't quite the same thing. So arguably the last sentence should have something like "...conclude that females and males have different GPAs..." instead of "...conclude that females have higher GPAs than males..." I'm saying that I think the options for the last sentence may be wrong.
+
+### Step 6: Calculate a confidence interval for the difference
+
+The following will allow us to calculate a 95% confidence interval for the difference between mean GPA scores for males and females. Interpret the confidence interval.
+
+```{r}
+ci_diff_gpa_means <- sat_gpa %>% 
+  specify(gpa_fy ~ sex) %>%
+  generate(reps = 5000) %>% 
+  calculate(stat = "diff in means", order = c("Female", "Male")) %>% 
+  get_ci(level = 0.95)
+ci_diff_gpa_means
+```
+Since the confidence interval does not span zero and (based on our order of subtraction,) we conclude that the mean GPA for females is between 0.056 and 0.235 points higher than the mean GPA for men.
+
+## Complete all the above tasks with a t-test
+
+Note that all the above steps can be done with one line of code **if a slew of assumptions** like normality (required, although if sample size is large it will be okay, which it is here) and equal variance (this is optional in a test of two means, there is a var.equal=FALSE option too) of the groups are met. 
+
+
+Checking for Normality we graph each set of GPAs
+```{r}
+ggplot(data=sat_gpa, mapping=aes(x=gpa_fy))+geom_histogram()+facet_wrap(~sex)+labs(x="First Year GPA", y="Number of Students")
+```
+
+Each is relatively bell shaped
+
+For equal variance, general rule is the standard deviations of one group are not more than 2 larger than the other.  There are fancier ways to test this, but we will use this general rule.
+
+```{r}
+sat_gpa %>% group_by(sex) %>% summarise("standard deviation"=sd(gpa_fy, na.rm=TRUE))
+```
+These are close to each other the larger is not more than twice the smaller.
+
+So we run the t.test and have the same conclusion with a slightly different p-value than we found with our permutation test.
+
+```{r}
+t.test(gpa_fy ~ sex, var.equal = TRUE, data = sat_gpa)
+```
+
+
+
+
+
+# Question 2: Relationship between high-school SATs & first-year GPA
+
+For this analysis `sat_total` is the outcome variable and `gpa_hs` is the predictor variable, with two levels "low" and "high". 
+
+## Exploratory data analysis
+
+We can first calculate the mean total SAT score for each group (i.e students with a low and high GPA), using the `group_by` and `summarize` commands from the `dplyr` package. (Note the SAT scores are in 10's for some reason. For example 108 is an SAT of 1080. Use the correct values of SATs for the interpretations.)
+
+```{r}
+avg_sat_gpa <- sat_gpa %>% 
+  group_by(gpa_hs) %>% 
+  summarize(sat_total = mean(sat_total))
+
+avg_sat_gpa
+```
+
+Create a data visualization that displays the total SAT scores of the two groups. Be sure to include a title and label your axes. 
+
+```{r}
+sat_gpa%>%
+  ggplot(aes(gpa_hs, sat_total))+
+  geom_boxplot()+
+  labs(x="High School GPA", y="Total Score on the SAT", title = "Total SAT Scores by High School GPA Level")
+```
+
+## Stating a null hypothesis
+
+#### Q2.a) 
+
+State the null hypothesis that you are testing (using either words or symbols)
+
+**Answer:** 
+
+$$\begin{aligned} H_0:&\mu_{high} = \mu_{low} \\\ \mbox{vs }H_A:& \mu_{high} \neq \mu_{low} \end{aligned}$$
+
+
+## Testing the hypothesis
+
+#### Q2.b) 
+
+Calculate the observed difference between the mean total SAT scores of the low and high GPA high-school students. Use obs_diff_sat_hs_gpa as the observed difference in the mean SAT variable name.
+
+```{r}
+obs_diff_sat_hs_gpa<-sat_gpa%>%
+  specify(sat_total~gpa_hs)%>%
+  calculate(stat = "diff in means", order = c("high", "low"))
+obs_diff_sat_hs_gpa
+```
+
+#### Q2.c) 
+
+Generate the null distribution of $\delta$. Here you need to generate simulated values *as if* we lived in a world where there's no difference in SAT scores between high school students with low and high GPAs. 
+
+```{r}
+sats_in_null_world<-sat_gpa%>%
+  specify(sat_total~gpa_hs)%>%
+  hypothesise(null="independence")%>%
+  generate(reps = 5000)
+```
+
+#### Q2.d) 
+
+Calculate the differences in mean SAT scores between students with low and high GPA scores under the Null. Note...you should use whatever order you chose above...i.e. `order = c("low", "high")` or `order = c("high", "low")`. 
+
+```{r}
+sat_diff_under_null<-sats_in_null_world%>%
+  calculate(stat="diff in means", order = c("high", "low"))
+sat_diff_under_null
+```
+
+#### Q2.e) 
+
+Visualize how the observed difference compares to the null distribution of $\delta$. Generate a histogram of the null distribution, with a vertical red line showing the observed difference in SAT scores between high school students with a high and low GPA. 
+
+```{r}
+sat_diff_under_null%>%
+  visualize()+
+  shade_p_value(obs_stat = obs_diff_sat_hs_gpa, direction="two-sided")
+```
+
+#### Q2.f) 
+
+Calculate a p-value
+
+**Answer:** 
+
+
+
+```{r}
+sat_diff_under_null%>%
+  get_p_value(obs_stat = obs_diff_sat_hs_gpa, direction = "both")
+```
+
+The p-value is approximately 0.
+
+
+#### Q2.g) 
+
+Write up the results and conclusions for this hypothesis test. Note, p-values less than 0.001 are often reported as p < 0.001. 
+
+**Answer:** 
+
+The mean total SAT score of students with "high" high school GPAs in our sample ($\bar{x}$ = 108.67828) in tens was greater than the mean total SAT score of students with "low" high school GPAs ($\bar{x}$ = 98.23047) in tens. We had p<0.001 which is less than $\alpha = 0.05$.  Given this I would reject the Null hypothesis and conclude that students with "high" high school GPAs have higher total SAT scores than students with "low" high school GPAs at the population level.
+
+
+#### Q2.h)
+
+Calculate and interpret a bootstrap confidence interval for the difference in total SAT scores for students with high and low high-school GPA scores. 
+
+```{r}
+
+ci_diff_sat_means <- sat_gpa %>%
+ specify(sat_total ~ gpa_hs) %>%
+ generate(reps = 5000) %>%
+ calculate(stat = "diff in means", order = c("high", "low")) %>%
+ get_ci(level = 0.95)
+ci_diff_sat_means
+
+```
+Since the confidence interval does not span zero (based on our order of subtraction) we conclude that the mean total SAT score for students with "high" high school GPAs is between 88.56886 and 120.7831 points higher than the mean total SAT score for students with "low" high school GPAs.
+
+
+#### Q2.i)
+
+Use a t-test to test the null hypothesis that total SAT scores do not differ between students with high and low high school GPA scores at the population level. Make sure to check for normality and equal variance assumptions. 
+
+```{r}
+ggplot(data=sat_gpa, mapping=aes(x=sat_total))+geom_histogram()+facet_wrap(~gpa_hs)
+```
+
+Both histograms are relatively bell shaped.
+
+
+```{r}
+sat_gpa %>% group_by(gpa_hs) %>% summarise("standard deviation"=sd(sat_total, na.rm=TRUE))
+```
+The larger standard deviation is not more than twice the smaller standard deviation.
+
+
+```{r}
+t.test(sat_total ~ gpa_hs, var.equal = TRUE, data = sat_gpa)
+```
+We still reject the null hypothesis.
+
+
+# More t-tests
+
+In this part, we will learn more about t-tests, using some data on newborn babies. This is a statistical analysis that can be used when you have a **continuous numeric outcome variable and a discrete (categorical) predictor with <u>TWO</u> values**. For instance, we could use a t-test to analyze whether mean weight in pounds differed between male and female bears. Here bear weight would be the **continuous numeric outcome** variable and sex of bears would be the **categorical predictor with two values: male and female**. 
+
+The reporting sentences here are in a scientific paper style and include error bars on the bar graphs. Business reporting is usually less formal.
+
+
+### The data
+
+In 2004, the state of North Carolina released a large data set containing  information on births recorded in this state. Each case in this data set is a birth.  We will work with a random sample of observations from this data set.
+
+Run the code below to load the data from where it is published on the web. 
+
+```{r, message = F}
+nc <- read_csv("https://docs.google.com/spreadsheets/d/e/2PACX-1vTm2WZwNBoQdZhMgot7urbtu8eG7tzAq-60ZJsQ_nupykCAcW0OXebVpHksPWyR4x8xJTVQ8KAulAFS/pub?gid=202410847&single=true&output=csv")
+```
+
+View the data in the data viewer using the code below:
+
+```{r glimpse, eval = F}
+glimpse(nc)
+```
+
+
+The variable names are `fage`, `mage`, `mature`, etc. 
+
+
+*** 
+# An example analysis
+
+For an example, we will test whether the birth weight for babies in lbs (stored in the variable `weight`) differs by maternal smoking `habit`. Before formal inference, an exploratory data analysis can be helpful for shedding light on the data and understanding relationships. 
+
+## Exploratory data analysis: summary statistics
+
+Our first step will be to calculate some summary statistics. 
+
+```{r}
+nc %>%
+  group_by(habit) %>%
+  summarise(sample_size = n(), 
+            mean_w = mean(weight))
+```
+
+This code says
+
+-  take the `nc` data **then**
+-  `group_by` the `habit` variable (smoker and non-smoker) **then**
+-  calculate the sample size for each group (smoker and non-smoker)
+-  and calculate the mean `weight` for each group
+
+Note that because we added a `group_by` command before the `summarize` command, our output  shows a mean birth `weight` and sample size for smokers **and** nonsmokers.
+
+
+## Exploratory data analysis:  data visualization
+The next step is to use graphs to look at the mean and 95% confidence intervals of birth `weight` for babies. Plotting the data helps us quickly visualize trends.
+
+To make a bar (column) graph with smoking habit on the x-axis and mean weight on the y-axis we need to make and save a data frame with summary statistics about birth `weight` by smoking habit, like so:
+
+```{r}
+summary_df <- nc %>%
+  group_by(habit) %>%
+  summarize(sample_size = n(), 
+            mean_w = mean(weight, na.rm = T), 
+            sd_w = sd(weight, na.rm = T), 
+            se = sd(weight)/sqrt(sample_size), 
+            lower_ci = mean_w - (se * 1.96),
+            upper_ci = mean_w + (se * 1.96))
+
+summary_df
+```
+
+
+This is similar to our calculation of summary stats above, by habit, but now we are storing the results in a data frame called `summary_df`. In addition, this time we **also** calculated the standard deviation and standard error of `weight` for nonsmokers and smokers, as well as the  95% confidence interval for the mean `weight` of smokers and nonsmokers. This will allow us to put 95% confidence interval error bars on our barplot. 
+
+
+
+ 
+Now we can use the `summary_df` shown above to make a  bar graph with smoking habit on the x-axis and weight on the y-axis. Note that the `summary_df` is the data set used in this plot, and the y axis is the mean weight (`mean_w`) we just calculated.
+
+```{r fig.height=5, fig.width=4}
+ggplot(data = summary_df, aes(x = habit, y = mean_w)) + 
+  geom_bar(stat = "identity",fill="light blue") + 
+  geom_errorbar(aes(ymin = lower_ci, 
+                      ymax = upper_ci), 
+                      width = 0.2,color="red") + 
+  labs(x = "Smoking habit", y = "Birth weight of newborns (lbs)", 
+       title = "Newborn weight by 
+       maternal smoking habit")
+```
+
+
+
+
+#### Q3
+ Based on the barplot:
+
+   1. Do nonsmoking or smoking mothers tend to give birth to heavier newborns?
+   
+Nonsmoking mothers tend to give birth to heavier newborns.
+    
+   2.  Inspect the 95% confidence interval bars. When we run a t-test to do you think we are going to find a statistically significant difference between mean weight of newborns for smoking and nonsmoking mothers? 
+
+
+I think we are probably not going to find a statistically significant difference between mean weight of newborns for smoking and nonsmoking mothers.
+
+
+
+## Null and Alternative Hypotheses
+
+We saw from the barplots, that there appears to be a difference in birth `weight` between smokers and non smokers. But is the difference statistically significant? In other words, is the difference that we saw in this **SAMPLE** something we might expect **by chance alone**, if in reality, there is no difference in birth `weight`  between smokers and non smokers in the **POPULATION**?
+
+
+
+We can test this with the following Null and Alternative Hypotheses: 
+
+$Ho: \mu_{smoker} = \mu_{nonsmoker}$
+
+$Ha: \mu_{nonsmoker} \neq mu_{nonsmoker}$
+
+
+where $\mu$ is the mean birth weight of babies
+
+
+
+
+
+
+
+#### Q4
+Why do we use $\mu$ when stating the Null and Alternative hypotheses, and not $M$ or $\overline{x}$??
+
+Answer: 
+
+$\mu$ is more distinguishable; $M$ could be confused for the median and $\overline{x}$ is typically reserved for the sample mean.
+
+## Formal inference: t-tests
+
+We will use the function, `t.test` for this analysis:
+
+```{r}
+t.test(weight ~ habit, data = nc, 
+       alternative = "two.sided", 
+       mu = 0, 
+       var.equal = TRUE,  
+       conf.level = 0.95)
+```
+
+
+
+Let's go through the arguments:
+
+
+- `weight ~ habit` is a formula of the form **numeric outcome y ~ categorical predictor x**
+
+- `data = nc`, indicates the data frame these variables are in
+
+- `alternative = "two.sided"` indicates to run a **two-tailed** test  
+
+
+- `paired = FALSE` indicates to run an **independent**, unpaired t-test  (This is the default and so can be skipped)
+
+- `mu = 0` indicates we are testing the **null hypothesis** that the difference between the two groups is zero (i.e. that $\mu_{smoker} = \mu_{nonsmoker}$)  (This is the default and so can be skipped)
+
+- `var.equal = TRUE` indicates we are going to run a test that assumes the **spread** (standard deviation) of birth weights in our sample is fairly similar for smokers and non-smokers (This is not the deault, if you skip it will do the not equal variance version, which is Dr. Roth's preference)
+
+- `conf.level = 0.95` tells R we are using an $\alpha$ of 0.05  (This is the default and so can be skipped)
+
+
+
+For more information on the function see the help file by typing `?t.test` into the console  or t.test into the help tab. Note: 
+
+ + we could change alternative to `"less"` or `"greater"` for a **one-sided** test 
+
+ + we can change `paired` to `TRUE` to run a dependent  or **paired** samples t-test
+
+ + we can change `var.equal`  to `FALSE` if we have very **unequal spread** (*SD*) between groups 
+
+ + we can change `conf.level` based on **the $\alpha$ you choose** for the test 
+
+
+
+
+## Cohen's d
+
+We can use the `cohen.d` function in the `effsize` library to calculate Cohen's *d*. Note you use the same formula `weight ~ habit` as in the `t.test`. Note below we run  `paired = FALSE` for an independent, unpaired t-test, but this could be changed to `TRUE` for a dependent, paired t-test. 
+
+```{r}
+cohen.d(weight~ habit, data = nc,  paired = FALSE,pooled=TRUE,conf.level=0.95)
+
+```
+
+
+
+As a rule of thumb, Cohen suggested that a *d* of approximately **0.2 is a "small"** effect, **0.5 is a "moderate"** effect, and a **0.8 or greater is a "large"** effect. Note that R will give you positive and negative values for *d*. Thus, -0.2 is also a "small" effect, -0.5 is a "moderate" effect, and so on.
+
+NOTE, the variance is computed using a different method, so the confidence intervals will be slightly different. We will use the interval computed using the t.test code.
+
+
+## Reporting results
+
+Re-run the `t.test` results, and inspect them. 
+
+
+```{r = F}
+t.test(weight ~ habit, data = nc,  alternative = "two.sided", 
+       mu = 0, var.equal = TRUE,  
+       conf.level = 0.95)
+cohen.d(weight ~ habit, data = nc,  paired = FALSE)
+```
+
+
+The following is how you would report these results: 
+
+
+I used a two-tailed independent (unpaired) t test to test the Null Hypothesis that there was no effect of smoking habit on the birth weight of newborns **at the population level**. Birth weight of newborns was greater for nonsmoker mothers  ( x-bar = 7.25, *SD* = 1.45) than for smoking mothers ( x-bar = 6.89, *SD* = 1.31). The difference between means was small (Cohen's *d* = 0.25). The p-value is 0.03 and is less than $\alpha$ = 0.05 (*t* = 2.17, *df* = 798). There was enough evidence to reject the Null Hypothesis. I conclude from this study that nonsmoking mothers give birth to heavier babies at the population level than smoking mothers.
+
+
+
+Be sure you can figure out where I got all these values. Most of them are from the `t.test()` output, but the *SD* values are from the summary statistics we calculated earlier, and the Cohen's *d* are from the `cohens.d()` output. 
+
+
+# Independent Practice 
+
+You will first investigate whether maternal weight gain differs between full term pregnancies and premature births. 
+
+* `y` is `gained`: the **numeric variable** for maternal weight gain 
+* `x` is `premie`: the **categorical variable** describing whether a birth was "full term" or "premie"
+
+The code below calculates all the necessary  summary stats and the 95% confidence intervals for weight `gained` for full term and premie births. 
+
+```{r}
+premie_summary <- nc %>% 
+  group_by(premie) %>%
+  summarize(sample_size = n(), 
+            mean_g = mean(gained), 
+            sd_g = sd(gained), 
+            se = sd_g/sqrt(sample_size), 
+            lower_ci = mean_g - (se * 1.96), 
+            upper_ci = mean_g + (se * 1.96))
+
+premie_summary
+```
+
+#### Q5 
+
+Use the `premie_summary` data frame to generate a bar plot showing the mean weight gained (and 95% confidence interval error bars) for full term and premie births. 
+
+```{r}
+ggplot(data = premie_summary, aes(x = premie, y = mean_g)) + 
+  geom_bar(stat = "identity",fill="light blue") + 
+  geom_errorbar(aes(ymin = lower_ci, 
+                      ymax = upper_ci), 
+                      width = 0.2,color="red")
+```
+
+
+
+#### Q6
+ Write out the Null and Alternative hypotheses for testing whether there is a significant difference between the maternal weight gain for full term and premie births at the population level. **Please use statistical symbols (see the example above in the "Null and Alternative Hypotheses" section), and be sure to define what $\mu$ is in this case.** You can just write the word mu instead of using $\mu$ if desired.
+ 
+
+$Ho: \mu_{full term} = \mu_{premie}$
+
+$Ha: \mu_{full term} \neq \mu_{premie}$
+
+
+where $\mu$ is the mean maternal weight gain.
+
+
+#### Q7
+ Run a two-tailed independent (unpaired) t-test to test whether there is a significant difference between the maternal weight gain for full term and premie births at the population level. You can set `var.equal = TRUE`. Make sure to check for normality and equal variance assumptions as well, although the sample size here is large enough to not check normality.
+
+```{r}
+nc%>%
+  filter(premie=="full term")%>%
+ggplot(mapping=aes(x=gained))+geom_histogram()
+```
+
+```{r}
+nc%>%
+  filter(premie=="premie")%>%
+ggplot(mapping=aes(x=gained))+geom_histogram()
+```
+
+
+Both histograms are relatively bell shaped. I decided not to use facet_wrap so the y-axis of the two histograms could have different scales.
+
+
+```{r}
+nc %>% group_by(premie) %>% summarise("standard deviation"=sd(gained, na.rm=TRUE))
+```
+The larger standard deviation is not more than twice the smaller standard deviation.
+
+```{r}
+t.test(gained ~ premie, data = nc, 
+       alternative = "two.sided", 
+       mu = 0, 
+       var.equal = TRUE,  
+       conf.level = 0.95)
+```
+
+
+#### Q8
+Report the value of each of these items in the R printout:
+
+    **A.** the test statistic *t*
+    
+3.9886.
+
+    **B.** the degrees of freedom (*df*)
+    
+798.
+    
+    **C.** the p-value 
+    
+7.259e-05
+
+#### Q9
+ Would you reject the Null Hypothesis at an $\alpha$ of 0.05? 
+ 
+
+Yes, because the p-value of 7.259e-05 is less than 0.05.
+
+#### Q10
+ Calculate Cohen's *d* for the difference in maternal weight gain between full term and premie births. 
+
+    **A.** Does the Cohen's d indicate a small, moderate, or large effect size?
+
+```{r }
+cohen.d(gained ~ premie, data = nc,  paired = FALSE)
+```
+
+The Cohen's d indicates a small effect size.
+
+
+#### Q11
+
+Write up your results in complete sentences.No flowery creativity is required; concise writing is required. As in my example you must report: 
+
+1. what type of test you used (two-tailed or one-tailed, independent or dependent)
+2. the Null hypothesis in words
+3. which level of the categorical variable has a greater average for the response variable
+4. the mean and SD of the response variable for each group
+5. the effect size and an interpretation
+6. whether the difference was or was not "statistically significant"
+7. an $\alpha$ (type `$\alpha$` to get $\alpha$) 
+8. t, df, p
+9. whether or not you reject the Null Hypothesis 
+10. a concise conclusion about what this means at the **population level**
+
+
+
+I used a two-tailed independent (unpaired) t test to test the Null Hypothesis that there was no effect of premature birth on maternal weight gain **at the population level**. The maternal weight gain was greater for full term pregnancies  ( x-bar = 31.54035, *SD* = 14.09739) than for premature births ( x-bar = 25.74528, *SD* = 12.79141). The difference between means was small (Cohen's *d* = 0.415937). The p-value is 7.259e-05 and is less than $\alpha$ = 0.05 (*t* = 3.9886, *df* = 798). There was enough evidence to reject the Null Hypothesis. I conclude from this study that full term pregnancies have greater maternal weight gain at the population level than premature births.
+
+
+
+# An investigation of duration of pregnancies
+
+
+You will now independently investigate whether the average duration of a pregnancy in weeks differs between mature and young mothers. 
+
+* `y` is `weeks`: the **numeric variable** for pregnancy duration 
+* `x` is `mature`: the **categorical variable** describing whether a woman was a "younger mom" or a "mature mom"
+
+
+
+
+#### Q12
+ Generate a table of summary statistics that includes the sample size (*n*) ,  standard deviation (*SD*), standard error, and mean (x-bar) of the duration of pregnancy for "younger moms" and "mature moms". Also calculate the 95% confidence interval for each of the mean duration of pregnancy for "younger moms" and "mature moms". **Be sure to save the summary stats you calculate, so you can use them to make a barplot in the next Exercise.**
+
+```{r}
+mother_summary <- nc %>% 
+  group_by(mature) %>%
+  summarize(sample_size = n(), 
+            mean_weeks = mean(weeks), 
+            sd_weeks = sd(weeks), 
+            se = sd_weeks/sqrt(sample_size), 
+            lower_ci = mean_weeks - (se * 1.96), 
+            upper_ci = mean_weeks + (se * 1.96))
+
+mother_summary
+
+```
+
+
+#### Q13
+ Generate a barplot to show the mean pregnancy duration for "younger moms" and "mature moms". Please be sure to include 95% confidence interval error bars.  Does it look like there is a difference in pregnancy duration?
+
+```{r}
+ggplot(data = mother_summary, aes(x = mature, y = mean_weeks)) + 
+  geom_bar(stat = "identity",fill="light blue") + 
+  geom_errorbar(aes(ymin = lower_ci, 
+                      ymax = upper_ci), 
+                      width = 0.2,color="red")
+```
+From the barplot it looks like younger moms might have a longer average pregnancy duration but it's hard to say if it's significant without running tests.
+
+
+
+### Q14
+Run an independent, two-tailed t-test to to test whether there is a significant difference between the pregnancy duration of younger and mature moms at the population level. You can set `var.equal = TRUE`.  Make sure to check for normality and equal variance assumptions as well, although the sample size here is large enough to not check normality.
+
+```{r}
+nc%>%
+  filter(mature=="mature mom")%>%
+ggplot(mapping=aes(x=weeks))+geom_histogram()
+```
+
+```{r}
+nc%>%
+  filter(mature=="younger mom")%>%
+ggplot(mapping=aes(x=weeks))+geom_histogram()
+```
+
+
+These histograms might not be bell shaped. Again I decided not to use facet_wrap so the y-axis of the two histograms could have different scales.
+
+
+```{r}
+nc %>% group_by(mature) %>% summarise("standard deviation"=sd(weeks, na.rm=TRUE))
+```
+The larger standard deviation is not more than twice the smaller standard deviation.
+
+```{r}
+t.test(weeks ~ mature, data = nc, 
+       alternative = "two.sided", 
+       mu = 0, 
+       var.equal = TRUE,  
+       conf.level = 0.95)
+```
+
+
+
+#### Q15
+ Calculate Cohen's *d* for the difference between pregnancy duration between mature and younger moms. 
+
+```{r}
+cohen.d(weeks ~ mature, data = nc,  paired = FALSE)
+```
+
+#### Q16
+Write up your results in complete sentences.
+
+I used a two-tailed independent (unpaired) t test to test the Null Hypothesis that there was no effect of a mother's maturity status on pregnancy duration **at the population level**. The pregnancy duration was greater for younger mothers  ( x-bar = 38.54106, *SD* = 2.648622) than for mature mothers ( x-bar = 38.04237, *SD* = 3.277465). The difference between means was small (Cohen's *d* = -0.1813503). The p-value is 0.0693 and is greater than $\alpha$ = 0.05 (*t* = 3.9886, *df* = 798). There was insufficient evidence to reject the Null Hypothesis that mature mothers have the same pregnancy duration as younger mothers at the population level.

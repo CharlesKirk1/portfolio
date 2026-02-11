@@ -1,0 +1,226 @@
+---
+title: "Final Exam  DS 520 Fall 2023"
+author: "Carolyn Cuff and Kim Roth"
+date: "11/28/2023"
+output:
+  word_document: default
+  html_document:
+    df_print: paged
+---
+
+
+In general for this exam: 
+
+All problems use the SleepStudy data set from the Lock5Data package. You should have installed this package at the beginning of the semester. If not, you'll need to install it now.
+
+Graphs should be labeled well. 
+
+Descriptions should be in context.
+
+You may use your book (in print or on the Internet), your notes, the course Moodle page, and any R files you have on your machine. You may not use the Internet outside of the moodle page and your book. You may not ask for outside nor receive outside help other than asking your professor (or Dr. Roth if she is proctoring your session) if you have a question.
+
+Library Load
+```{r}
+library(tidyverse)
+library(Lock5Data) 
+library(moderndive)
+library(infer)
+set.seed(1224)
+```
+
+The SleepStudy data set is from Lock5Data package that goes with Statistics Unlocking the Power of Data by Lock et. al. The data was collected as part of the following study:
+
+Data source: Onyper, S., Thacher, P., Gilbert, J., and Gradess, S., “Class start times, sleep, and academic performance in college: A path analysis,” Chronobiology International, April 2012; 29(3):318–335.
+
+Here are the variables we are considering from the data description
+
+GPA-Grade point average (0-4 scale)
+
+DASScore-Combined score for depression, anxiety and stress
+
+Happiness-	Measure of degree of happiness (a score)
+
+Stress-	Coded stress score: normal or high
+
+AverageSleep-Average hours of sleep for all days
+
+AllNighter-Had an all-nighter this semester? 1=yes, 0=no
+
+
+
+You can use the code below to view a slice of the data set.
+```{r}
+slice(SleepStudy, 1:5)
+
+```
+
+1.  (2 points)From the package Lock5Data, read the details of the SleepStudy data file.The Details and Source section at the end. Based on these sections, what is the intended population? Note the details are a bit vague so there are multiple correct answers.
+
+```{r}
+?`Lock5Data-package`
+```
+
+If by intended population you mean intended audience then that could be either students or parents as either could have an interest in the effect sleep loss has on things like cognitive function. If you mean population as in the individuals in the dataset we are interested in then the population is students.
+
+2. Consider the variable GPA:
+
+a. (1 point) Find the mean GPA of the data. Name it point_est.
+
+```{r}
+SleepStudy%>%
+  summarise(point_est=mean(GPA))
+```
+
+
+b. (3 points) Make a bootstrap distribution for the mean GPA and visualize it.
+
+
+
+
+c. (2 points) Could the bootstrap distribution be used to find a confidence interval for the mean GPA. Explain your answer.
+
+
+
+
+
+d. (3 points) Regardless of your answr for part c create a 95% (normal) bootstrap confidence interval for the mean GPA and visualize it.
+
+
+
+e. (4 points) Write a sentence interpreting your confidence interval in context.
+
+
+
+f. (3 points) Make a 90% percentile bootstrap confidence interval for the mean GPA and visualize it.
+
+
+g. (4 points) Which interval is wider the 90% or the 95% interval. Explain why your answer is true.
+
+
+
+
+3. (5 points) Compare and contrast the bootstrap distribution for mean GPA you made in 2 with the theoretical sampling distribution for the mean GPA for this population. What would be the same and what would be different?
+
+
+
+4. Consider the variables Stress and AllNighter for this question.
+
+a. (2 points) What is the code below doing? Why are we doing that? Make sure you run the code.
+
+The code below is changing the AllNighter variable into a factor. This is appropriate to do because it is not really showing a quantitative result but rather identifying which students have pulled all nighters and which have not.
+
+```{r}
+SleepStudy=SleepStudy%>%mutate(AllNighter=as.factor(AllNighter))
+View(SleepStudy)
+```
+
+
+
+b. (2 points) Find the difference in the proportion of students who had an all nighter for students with high levels of Stress - students with normal levels of Stress.
+
+```{r}
+
+```
+
+
+c. (2 points) Check the assumptions to use a theoretical interval and test for this parameter. Make sure to explain how you are a little worried here. However, you should proceed with testing in the subsequent questions. 
+
+
+
+
+
+d. (2 points) Calculate the 90% theoretical confidence interval for the proportion of students who had an all nighter for students with high levels of Stress minus students with normal levels of Stress.
+
+
+e. (4 points) Interpret your interval in context.
+
+
+
+
+f. (5 points) The theoretical confidence interval and/or its code can be used to make a hypothesis test. Which hypothesis can you test and what significance level corresponds to the confidence level? State the null and alternative hypotheses. What conclusion can you make and why? Interpret your result of the hypothesis test in context. You may give a short interpretation in context rather than the longer scientific form interpretation and still receive full credit if it is complete and correct.
+
+
+
+
+5. Consider the variables AverageSleep and AllNighter for this question.
+
+a. (2 points)  Find the mean of average sleep for students who had an all nighter, the mean for students who did not have an all nighter, and the  difference between the mean average sleep hours for students who had an all nighter-students who did not.
+
+```{r}
+allnightmean<-SleepStudy%>%
+  filter(AllNighter==1)%>%
+  summarise(nightmean=mean(AverageSleep))%>%
+  select(nightmean)
+notallnightmean<-SleepStudy%>%
+  filter(AllNighter==0)%>%
+  summarise(notnightmean=mean(AverageSleep))%>%
+  select(notnightmean)
+allnightmean-notallnightmean
+```
+
+
+b. (3 points) Visualize AverageSleep and AllNighter together. What do you see? What do you wonder? Does it look like there is as significant difference in average hours of sleep for all nighter minus no all nighter?
+
+```{r}
+SleepStudy%>%
+  ggplot()+
+  geom_boxplot(aes(AllNighter, AverageSleep))
+```
+
+
+c. (2 points) Write the null and alternative hypotheses for testing whether there is a difference in mean  average hours of sleep for all nighter minus no all nighter. Make sure to define your parameters.
+
+
+d. (2 points) Generate the null distribution of the difference in average hours of sleep for all nighter minus no all nighter ($\delta$). 
+
+
+e. (2 points) Visualize how the observed difference compares to the null distribution of $\delta$.  Describe what this graph tells you.
+
+
+
+
+f. (2 points) Calculate the p-value. 
+
+g. (4 points) State the conclusion of your hypothesis test in context. You may give a short interpretation in context rather than the longer scientific form interpretation and still receive full credit if it is complete and correct.
+
+
+6. For the variables DASScore and Happiness.
+
+a. (2 points) Graph DASScore and Happiness together. What type of relationship, if any, do you see between the two variables?
+
+
+
+b. (2 points) Make a linear model for Happiness predicted by DASScore and get its regression table.
+
+
+
+
+
+c. (3 points) Looking at either the regression table or the summary for the model. Is the model valid? Explain your answer using a p-value and making a conclusion in context.
+
+
+
+d. (4 points) Looking at the regression table, give the 95% confidence interval for the slope and interpret it in context.
+
+
+
+
+e. (2 points) Give an interpretation of the R-squared (r^2) value in the context of the model
+
+
+
+
+f. (4 points) Looking at context of the data and the graphs of the data and model, the residual plot, and the histogram of residuals. Does the model fit the LINE criteria? Explain.
+
+
+
+
+
+g. (2 points) What is your assessment of the overall model? Would you use it? Why or why not?
+
+
+
+
+
+
+

@@ -1,0 +1,117 @@
+---
+title: "FiveThirtyEightEDAProject2ndDraft"
+author: "Charles Kirk"
+date: "2024-09-12"
+output:
+  word_document: default
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+Your goal for this project is to make some graphs from the five thirty eight data you choose. 
+
+Use the vignettes in the package to get you started. Then find one of the data sets that was not used in a vignette in the package that interests you.
+
+Articles and data can be found by going to the fivethirtyeight package and clicking on the help tab. Choose an article with at least one categorical variable and one quantitative variable and at least one graph.
+
+Read the article associated with your data to help you understand the data.
+
+10 points
+1.) What data set did you choose? Give the article name, a link to the article and the data set name. Briefly summarize the article.
+
+I chose a data set called "College Majors" with the name of the associated article being "The Economic Guide To Picking A College Major." The article explains certain economic realities behind choosing a college major. For example while on average it is technically true that a college degree is valuable, the choice of major greatly affects the earnings a graduate can expect as well as their likelihood of becoming unemployed or underemployed. There were actually 5 tables in College Majors so I picked the one on recent graduates called recent-grads.csv. Link to the article: https://fivethirtyeight.com/features/the-economic-guide-to-picking-a-college-major/
+
+
+Library load
+```{r}
+library(tidyverse)
+library(fivethirtyeight)
+```
+
+Now to make some graphs.
+10 points
+2.) What variables are in your data set? Give the type and a brief but descriptive definition for each of the variables you use in this project.
+
+```{r}
+recent_grads <- read_csv("~/Dropbox/Charley/Juniata/Data Science Masters/Data Mining/recent-grads.csv")
+```
+
+Major is a categorical variable which gives the name of each major in the dataset and serves as a unique identifier for each row. Major_category is another categorical variable except it describes broader categories that majors fall into and is not unique. Total is a quantitative variable that gives the total number of graduates in a major. The Men and Women variables are quantitative variables that give the number of men and women in a major respectively. The ShareWomen variable is a quantitative variable that gives the decimal proportion of women in the major, and it's value can be derived from Total and Women. The last variable I use is Median, which is a quantitative variable that gives the median annual income of graduates who work full-time and year-round.
+
+
+15 points
+3a.)Make a graph with one variable and describe the graph in context.
+```{r}
+recent_grads%>%
+  ggplot()+
+  geom_boxplot(aes(y=ShareWomen))+
+  scale_x_continuous(breaks = c(0))
+```
+
+This is a boxplot of the ShareWomen variable. The ShareWomen variable gives the decimal proportion of women in a major (each row in the table is a major). The median of the boxplot is only a little above 0.50 (with ShareWomen on the y-axis) but the edges of the box representing the 25th and 75th percentiles of the values don't seem quite symmetric about the median. The top whisker doesn't extend all the way to 1.00 but it's probably not surprising that there isn't a college major 100% dominated by women. On the other hand 1.00 does at least appear to fall within 1.5 times the interquartile range.
+
+5 points
+3b.) Explain why you chose the type of graph that you chose.
+
+I did also try a histogram but it was a bit harder to say anything interesting about it. The boxplot graph is interesting because you can see how the share of women in each major matches up with the actual percentiles of the ShareWomen variable. Of course we wouldn't expect to see the percentiles of the boxplot line up with the decimal proportions on the y-axis because they are not quite representing the same thing. The median of the boxplot is actually above 0.50, which could suggest that most college graduates are women, but this is of course not conclusive because for one thing it's possible that the majors that are dominated by men also have a much larger number of people, which could mean the total number of male college graduates is greater than the total number of female college graduates.
+
+15 points
+4a.) Make a graph with two variables and describe the graph in context.
+
+```{r}
+recent_grads%>%
+  ggplot()+
+  geom_point(aes(Men, Women), alpha=0.2)+
+  scale_y_continuous(limits=c(0, 15000))+
+  scale_x_continuous(limits=c(0, 15000))
+```
+
+This is a scatterplot with the "Men" variable on the x-axis and the "Women" variable on the y-axis. The points are transparent allowing the viewer to get an idea of how densely the points are clustered on the bottom left.
+
+
+5 points
+4b.) Explain why you chose the type of graph that you chose.
+
+I was just curious to see if there was a general correlation between the number of men who signed up for a major and the number of women who signed up for a major. A scatterplot was sensible because Men and Women are both numerical variables and you can get a sense of the correlation by looking at the pattern made by the points on the graph. Here there might be a weak positive correlation.
+
+15 points
+5.) Make a graph with three or more variables and describe the graph in context.
+
+```{r}
+recent_grads%>%
+  pivot_longer(c(Men, Women), names_to = "Gender", values_to = "G_Total")%>%
+  ggplot()+
+  geom_col(aes(Major_category, G_Total, fill=Gender), position="dodge")+
+  coord_flip()
+```
+
+This is a side-by-side bar chart. The 16 major categories are shown on one axis and the other axis shows the number of graduates in that major category with the bars broken up by gender. Blue bars show the number of women in the major category and red bars show the number of men in the major category. From this graph we can observe that Engineering is much more popular with men than women, while Education is more popular with women than men. The Law and Public Policy category is pretty unpopular in general while Social Science seems pretty popular for both men and women.
+
+5 points
+5b.) Explain why you chose the type of graph that you chose.
+
+I'm kind of building off of my previous graphs by looking at the Men and Women variables again but this time separating them by major category. This gives more information on the actual majors men and women are interested in. A regular bar chart would be good for just showing the distribution of Major_category since it's a categorical attribute, but Men and Women are quantitative attributes, so I mapped the total number of Men and Women in each major category to the y aesthetic (before flipping the graph) and separated the bars by gender. This approach lets me graph a categorical attribute and two quantitative attributes in a visually pleasing way. I also tried a stacked bar chart which is probably more visually pleasing but it makes things a bit harder when it comes to direct comparisons between majors.
+
+15 points
+6a.) Make a graph similar to one in the article. Describe how your graph resembles the one in the article and how it doesn't. 
+
+
+```{r}
+recent_grads%>%
+  filter(Median>=60000)%>%
+  mutate(Major=fct_reorder(Major, Median))%>%
+  ggplot()+
+  geom_col(aes(Major, Total))+
+  coord_flip()
+```
+
+There was a table in the article showing majors with high median earnings. The main difference with that visualization and mine is that they used a table while I used a bar chart. I also didn't include Major_category or Median in my graph explicitly, but I did order the levels of major in decreasing order of Median to make it similar to the order in the article. That said the order still isn't quite the same because some majors have the same value for Median; for example Nuclear Engineering and Chemical Engineering have the same value for Median and so Chemical Engineering could be written before Nuclear Engineering and vice versa.
+
+5 points
+6b).Describe what your graph shows in context. 
+
+The graph shows that even though majors like Petroleum Engineering, Mining and Mineral Engineering and Metallurgical Engineering all have high median earnings, there are majors with lower median earnings that are vastly more popular like Mechanical Engineering and Electrical Engineering.

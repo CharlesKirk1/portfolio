@@ -1,0 +1,251 @@
+---
+title: "Midterm"
+author: "CKC"
+date: "10/19/2024"
+output:
+  word_document: default
+---
+Rmd part of the exam
+This part of the exam MUST be uploaded before the time runs out.No exceptions. It would be better to lose some points rather than lose the entire 80% because you did not upload your answer file within the two hour time limit.
+
+In general for this part of the exam:
+
+*The KidsFeet data set is the data for this part. It comes from mosaicData package. Although we have not used this package to date, it was installed as part of the RTestDS520 rmd file at the beginning of the semester. 
+*Graphs do not need to be labeled.
+*Descriptions must be in context for full credit.
+
+* You may use your book (in print or on the Internet), your notes, the course Moodle page, and any R files you have on your machine. 
+* You may not use the Internet outside of the Moodle page and your textbook. 
+* You may not ask for outside nor receive outside help other than asking your professor if you have a question.
+* You may turn in the rmd file. You do not need to knit your code.
+
+
+Library Load
+```{r}
+library(tidyverse)
+library(mosaicData)
+library(moderndive)
+```
+
+
+
+
+Data were collected feet size of fourth grade children (approximately 10 years old) by a statistician, Mary C. Meyer,  October 1997. (Quoted from the source) "From a very young age, shoes for boys tend to be wider than shoes for girls. Is this because boys have wider feet, or because it is assumed that girls, even in elementary school, are willing to sacrifice comfort for fashion? To assess the former, a statistician measures kids' feet."
+
+A reference for the data is given in the data set description in the mosaicData package.
+
+Here are the descriptions of variables you will use. 
+
+*name - child's name
+*length - length of longer foot (in cm)
+*width - width of longer foot (in cm)
+*sex - sex of child (a factor)
+*biggerfoot - L if the left foot is bigger, R if the right foot is bigger (a factor)
+*domhand - the dominant hand of the child (a factor)
+
+1. (2 points) How would you get the descriptions of the other variables in the
+data set using R?
+
+```{r}
+?KidsFeet
+```
+
+We could use ?KidsFeet to access the R documentation of the data.
+
+2.a (5 points) Make an appropriate graph for the length of the longer foot. Describe the graph. 
+
+```{r}
+KidsFeet%>%
+  ggplot()+
+  geom_histogram(aes(length), bins=30)
+```
+
+The distribution looks approximately normal, with a center somewhere around 24.
+
+
+2b (5) Obtain the specific numeric values the description using the dataverb summarize.
+
+```{r}
+KidsFeet%>%
+  summarise(median(length), q1 = quantile(length, 0.25, na.rm = TRUE), q3 = quantile(length, 0.75, na.rm = TRUE))
+```
+
+
+2c (3) Describe the graph using the values you found in 2b
+
+
+The center of the distribution seems to be around 24.5, and about 50% of the data appears to fall between 24 and 25.6.
+
+
+
+3. (3 points) Make an appropriate graph for the bigger foot and dominant hand.
+
+```{r}
+KidsFeet%>%
+  ggplot()+
+  geom_bar(aes(biggerfoot, fill=domhand))
+```
+
+
+3b (5 points) Describe the graph and comment on what this graph tells us the relationship between these two variables.
+
+
+The graph is a stacked bar plot with the biggerfoot variable on the x axis, the count of kids on the y axis and the domhand mapped to the fill aesthetic. It shows that a higher proportion of kids with bigger right feet have a left dominant hand than kids who have bigger left feet. However more kids in the sample have bigger left feet on the whole.
+
+
+
+4. (5 points) Write code that picks the variables name and birthyear for a new data set. Name that data set Child. We will not use this data set again.
+
+
+
+```{r}
+Child<-KidsFeet%>%
+  select(name, birthyear)
+```
+
+
+
+
+
+
+5. (3 points) What does this code do? Why would we do that for this data set? 
+
+
+```{r}
+KidsFeet<-KidsFeet%>%
+  mutate(currentage=97-birthyear) %>%
+  mutate(currentage=if_else(birthmonth>=11,currentage-1,currentage))
+```
+
+This code gives the approximate age in years of the kids in the data set. We might want those ages to see if there's a pattern between the ages of the kids and the other variables in the data set.
+
+6a (5) Make an appropriate graph for length of the longer foot and width of the longer foot. 
+
+
+```{r}
+KidsFeet%>%
+  ggplot()+
+  geom_point(aes(length, width))
+```
+
+
+
+6b (5) Describe the graph and comment on what this graph tells us about the relationship between these two variables.
+
+The graph is a scatterplot with the length of the longer foot on the x axis and the width of the longer foot on the y axis. It shows that the length and width are somewhat positively correlated. I would say either weakly correlated or moderately correlated, probably the latter if I had to choose.
+
+7. (5 points) Find the correlation between length and width. Comment on the correlation. Is this correlation supported by the previous graph?
+
+```{r}
+cor(KidsFeet$length, KidsFeet$width)
+```
+
+
+The correlation is about 0.641. This shows that length and width are positively correlated, and since it is greater than 0.5 I would say the correlation is moderate. So the correlation is supported by the previous graph.
+
+
+
+8a. (5 points) Make a linear model for length as predicted by width. 
+
+```{r}
+len_wid<-lm(length ~ width, data = KidsFeet)
+```
+
+
+
+
+8b (2 points) State the equation for the model. 
+
+```{r}
+get_regression_table(len_wid)
+```
+
+Predicted length=1.658*(width)+9.817.
+
+8c (3 points) Use the equation to predict the length of child's foot when the child's foot is 9 cm wide.
+
+
+```{r}
+1.658*(9)+9.817
+```
+
+The predicted length is 24.739.
+
+8d (5 points) Interpret the slope and intercept in context.
+
+The interpretation given below is correct I think, but I didn't write it, it was already pasted under the question. It might have been left here by mistake. In addition to saying the intercept has no practical interpretation I would add that the mathematical interpretation of the intercept is that it is the predicted value of length when the width is 0.
+
+For every cm increase in width the expected increase in length is 1.658 cm
+
+It doesn't make sense to interpret the intercept since no feet are zero in width.
+
+
+
+
+9a (3 points) Make a side-by-side boxplot for width vs sex. 
+
+
+```{r}
+KidsFeet%>%
+  ggplot()+
+  geom_boxplot(aes(sex, width))
+```
+
+
+
+
+9b (5 points) Describe the graph and comment on what this graph tells us about the relationship between these two variables. In particular discuss the medians, quartiles, minimum, maximum, interquartile range and any outliers. It is okay to give approximate values for numbers where you use them.
+
+
+
+The median for boy's width appears to be around 9.2 while the median for girl's width appears to be around 8.8. The interquartile ranges are kinda close; my educated guess would be that there's a difference of about 0.2 units between the interquartile range for boys and the interquartile range for girls. The maximum width might be around 9.8 for boys and 9.5 for girls. The minimum width might be around 8.4 for boys and 7.9 for girls. The third quartile for boys seems to be about 9.6 while the third quartile for girls seems about level with the median for boys. The first quartile for boys is barely above the median for girls and the first quartile for girls might be about 8.5. There are no outliers visible in either boxplot.
+
+
+
+10a (3 points) Make a model for width of the longer foot vs sex. 
+
+
+```{r}
+wid_sex<-lm(width ~ sex, data = KidsFeet)
+```
+
+
+
+
+10b (3 points) Write the equation of the model for a boy. 
+
+```{r}
+get_regression_table(wid_sex)
+```
+
+Predicted width=9.190+(-0.406)*(0)=9.190.
+
+11a (2 points) Examine the graph for width and predicted by length, and accounting for sex. 
+
+
+```{r}
+KidsFeet%>%
+  ggplot(aes(length, width, color=sex))+
+  geom_point()+
+  geom_smooth(method = "lm", se = FALSE)
+```
+
+
+11b (3) Would a parallel or interaction model better fit these variables. Explain your answer.
+
+```{r}
+widlensex1<-lm(width ~ length + sex, data = KidsFeet)
+get_regression_summaries(widlensex1)
+```
+
+```{r}
+widlensex2<-lm(width ~ length * sex, data = KidsFeet)
+get_regression_summaries(widlensex2)
+```
+
+```{r}
+get_regression_table(widlensex1)
+get_regression_table(widlensex2)
+```
+
+With the r-squared values of the parallel slopes model and the interaction model being approximately the same, we should choose the parallel slopes model for it's relative simplicity.

@@ -1,0 +1,332 @@
+---
+title: "CheeseData"
+author: "Charles Kirk"
+date: "2024-10-11"
+output: word_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(tidyverse)
+library(ggplot2)
+library(dplyr)
+library(moderndive)
+library(readr)
+library(skimr)
+```
+
+
+Here I load in a Food Nutritional Values dataset that I found on data.world, storing it as a dataframe called ABBREV. I believe the data originates from the USDA.
+```{r}
+ABBREV <- read_csv("~/Dropbox/Charley/Juniata/Data Science Masters/Statistics Fundamentals/ABBREV.csv")
+```
+
+Here I create a cdata dataframe with just the rows in ABBREV that pertain to cheese and have GmWt_Desc1='1 oz'. I also create a categorical vitc column from the quantitative `Vit_C_(mg)` column by using the recode function, and I select that columm and 5 other columns into my cdata dataframe.
+```{r}
+cdata<-ABBREV%>%
+  filter(str_detect(Shrt_Desc, "CHEESE"), GmWt_Desc1=='1 oz')%>%
+  mutate(vitc=recode(`Vit_C_(mg)`, '0'='No', .default='Yes'))%>%
+  select(Energ_Kcal, `Protein_(g)`, `Lipid_Tot_(g)`, `Carbohydrt_(g)`, `Sodium_(mg)`, vitc)%>%
+  rename(cal=Energ_Kcal, pro=`Protein_(g)`, lip=`Lipid_Tot_(g)`, carb=`Carbohydrt_(g)`, sod=`Sodium_(mg)`)
+```
+
+The 5 quantitative variables in cdata that I'm using for this project are cal, pro, lip, carb and sod, which refer to calories, protein, lipids, carbohydrates and sodium respectively. I think lipids are a category of compounds that includes fats. The only categorical variable in cdata that I'm using for this project is vitc, which is meant to have a value of yes if the cheese contains Vitamin C and have a value of no if the cheese does not contain Vitamin C.
+
+I use glimpse and sample_n() to get a basic idea of what the rows in cdata look like.
+```{r}
+cdata%>%
+  glimpse()
+```
+
+```{r}
+cdata%>%
+  sample_n(size = 10)
+```
+
+
+Here I'm just doing a basic scatterplot matrix to get a rough sense of the correlations between my quantitative variables.
+```{r}
+cdata%>%
+  select(-vitc)%>%
+  pairs()
+```
+
+I use skim here to learn a bit more about my variables.
+```{r}
+cdata%>%
+  skim()
+```
+
+
+All of the following models of cal with a single quantitative explanatory variable should satisfy the independence condition of LINE as all the quantitative variables in our data depend directly on the NDB_No variable from the original dataset which contains no duplicate values.
+
+```{r}
+calpro <- lm(cal ~ pro, data = cdata)
+```
+
+```{r}
+cor(cdata$cal, cdata$pro)
+```
+
+```{r}
+cdata%>%
+  ggplot(aes(pro, cal))+
+  geom_point()+
+  geom_smooth(method = "lm", se = FALSE)
+```
+
+Based on the low correlation coefficient of -0.07761837 and the graph above, we can say that this model is a poor fit. Which also means that the model fails the linearity condition of LINE.
+
+```{r}
+get_regression_points(calpro)%>%
+  ggplot(aes(x = residual)) +
+    geom_histogram(bins=30)
+```
+
+```{r}
+get_regression_points(calpro)%>%
+  summarise(mean(residual))
+```
+
+
+Although the histogram is a bit right-skewed, it is roughly bell shaped and the average of the residuals is close to 0. So I would say the model passes the normality condition of LINE.
+
+
+```{r}
+get_regression_points(calpro)%>%
+ggplot(aes(x = pro, y = residual)) +
+  geom_point() +
+  geom_hline(yintercept = 0, col = "blue", size = 1)
+```
+
+I would say there is not an obvious change in the spread of the residuals around the line y=0. So I will say that this model passes the equality condition of LINE.
+
+```{r}
+callip <- lm(cal ~ lip, data = cdata)
+```
+
+```{r}
+cor(cdata$cal, cdata$lip)
+```
+
+
+```{r}
+cdata%>%
+  ggplot(aes(lip, cal))+
+  geom_point()+
+  geom_smooth(method = "lm", se = FALSE)
+```
+
+Based on the correlation coefficient of 0.5762229 and the graph above, we can say that cal and lip have a moderate positive correlation. Which also means that the model passes the linearity condition of LINE.
+
+```{r}
+get_regression_points(callip)%>%
+  ggplot(aes(x = residual)) +
+    geom_histogram(bins=30)
+```
+
+```{r}
+get_regression_points(callip)%>%
+  summarise(mean(residual), median(residual))
+```
+
+
+Here the histogram is right-skewed but it does not clearly break from the bell-shape, and the center could still be close to 0. So I would say the model passes the normality condition of LINE. I'm trying to account for the fact that the number of data points isn't as big as would be preferred and so the sample distribution could have some error.
+
+
+```{r}
+get_regression_points(callip)%>%
+ggplot(aes(x = lip, y = residual)) +
+  geom_point() +
+  geom_hline(yintercept = 0, col = "blue", size = 1)
+```
+
+Again I would say there is not an obvious change in the spread of the residuals around the line y=0. So I will say that this model passes the equality condition of LINE.
+
+```{r}
+calcarb <- lm(cal ~ carb, data = cdata)
+```
+
+
+```{r}
+cor(cdata$cal, cdata$carb)
+```
+
+
+```{r}
+calcarb%>%
+  get_regression_points()%>%
+  ggplot(aes(carb, cal))+
+  geom_point()+
+  geom_smooth(method = "lm", se = FALSE)
+```
+
+Although the line above may not look like a strong fit for the data points, the correlation coefficient is 0.5613381 so we can say that cal and carb have a moderate positive correlation. Which means this model passes the linearity condition of LINE.
+
+```{r}
+get_regression_points(calcarb)%>%
+  ggplot(aes(x = residual)) +
+    geom_histogram(bins=30)
+```
+
+```{r}
+get_regression_points(calcarb)%>%
+  summarise(mean(residual))
+```
+
+
+Here the histogram doesn't obviously break from the bell shape pattern and the center could be near 0. So I would say the model passes the normality condition of LINE.
+
+
+```{r}
+get_regression_points(calcarb)%>%
+ggplot(aes(x = carb, y = residual)) +
+  geom_point() +
+  labs() +
+  geom_hline(yintercept = 0, col = "blue", size = 1)
+```
+
+The spread is actually surprisingly consistent here. While there do seem to be more points on the left side of the graph I think for the equality condition of line we are more interested in the heights or the distances of the residuals from the horizontal line. So I will say that this model passes the equality condition of LINE.
+
+
+```{r}
+calsod <- lm(cal ~ sod, data = cdata)
+```
+
+
+```{r}
+cor(cdata$cal, cdata$sod)
+```
+
+
+```{r}
+cdata%>%
+  ggplot(aes(sod, cal))+
+  geom_point()+
+  geom_smooth(method = "lm", se = FALSE)
+```
+
+The correlation coefficient is pretty low at -0.01335225 and the line above isn't obviously a great fit for the data points, so we can say that this model fails the linearity condition of LINE.
+
+```{r}
+get_regression_points(calsod)%>%
+  ggplot(aes(x = residual)) +
+    geom_histogram(bins=20)
+```
+
+```{r}
+get_regression_points(calsod)%>%
+  summarise(mean(residual))
+```
+
+
+The histogram is a little right skewed but it doesn't obviously break from the bell shape pattern and the center could be near 0. So I would say the model passes the normality condition of LINE.
+
+
+```{r}
+get_regression_points(calsod)%>%
+ggplot(aes(x = sod, y = residual)) +
+  geom_point() +
+  labs() +
+  geom_hline(yintercept = 0, col = "blue", size = 1)
+```
+
+I wouldn't say there is a clear-cut change in the spread of the residuals around the line y=0. So I will say that this model passes the equality condition of LINE.
+
+Next I will analyze a model with cal as a response variable and lip and carb as explanatory variables.
+```{r}
+ callipcarb<- lm(cal ~ lip + carb, data = cdata)
+```
+
+```{r}
+callipcarb%>%
+  summary()
+```
+
+The r-squared value for this model is actually quite high at 0.8849, so I will say the linearity condition of LINE is probably met.
+
+
+As I said before, all the quantitative variables in our data depend directly on NDB_No from the original dataset which contains no duplicate values, so our model should meet the independence condition of LINE.
+
+
+```{r}
+get_regression_points(callipcarb)%>%
+  ggplot(aes(x = residual)) +
+    geom_histogram(bins=20)
+```
+
+```{r}
+get_regression_points(callipcarb)%>%
+  summarise(mean(residual))
+```
+
+The distribution of the residuals looks pretty good with a rough bell-shape and a center at or near 0. So I would say the model passes the normality condition of LINE.
+
+```{r}
+get_regression_points(callipcarb)%>%
+ggplot(aes(x = lip, y = residual)) +
+  geom_point() +
+  labs() +
+  geom_hline(yintercept = 0, col = "blue", size = 1)
+```
+
+
+```{r}
+get_regression_points(callipcarb)%>%
+ggplot(aes(x = carb, y = residual)) +
+  geom_point(alpha=0.2) +
+  labs() +
+  geom_hline(yintercept = 0, col = "blue", size = 1)
+```
+For the graph of lip against residual, the spread looks pretty good. For the graph of carb against residual, while the spread may seem greater on the left side of the graph, I think that might be driven largely by the fact that there are simply a lot more data points on that side. So I will say that the model passes the equality condition of LINE.
+
+Here I create two models where cal is a response variable while carb and vitc are explanatory variables. The first model, calcarbvitc1, is an interaction model while the second model, calcarbvitc2, is a parallel slopes model.
+```{r}
+calcarbvitc1<- lm(cal ~ carb * vitc, data = cdata)
+calcarbvitc2<- lm(cal ~ carb + vitc, data = cdata)
+```
+
+```{r}
+ggplot(cdata, aes(x = carb, y = cal, color = vitc)) +
+  geom_point() +
+  labs() +
+  geom_smooth(method = "lm", se = FALSE)
+```
+
+```{r}
+ggplot(cdata, aes(x = carb, y = cal, color = vitc)) +
+  geom_point() +
+  labs() +
+  geom_parallel_slopes(se = FALSE)
+```
+
+```{r}
+summary(calcarbvitc1)
+```
+
+```{r}
+summary(calcarbvitc2)
+```
+
+The parallel slopes model seems like the clear choice here. The difference in slopes in the interaction model isn't enormous and the r-squared values between the two models aren't that different either, so the simpler parallel slopes model is preferred.
+
+The fit for calcarbvitc2 is a bit poor, as evidenced by the somewhat low r-squared value of 0.4154.
+
+```{r}
+summary(calcarb)
+summary(callip)
+summary(calpro)
+summary(calsod)
+summary(callipcarb)
+summary(calcarbvitc1)
+summary(calcarbvitc2)
+```
+
+Of all the models I've created for this project I would say that callipcarb probably has the best fit, as it has the highest r-squared value of 0.8849.
+
+Citation:
+
+“Food Nutritional Values.” Data.World, data.world/awram/food-nutritional-values/workspace/file?filename=ABBREV.xlsx. Accessed 20 Sept. 2024.

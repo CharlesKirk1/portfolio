@@ -1,0 +1,348 @@
+---
+title: "Count the Stars"
+author: "Charley Kirk"
+date: "10/24/2024"
+output:
+  word_document: default
+  pdf_document: default
+---
+
+Library load
+```{r setup, include=FALSE}
+
+library(tidyverse)
+library(readr)
+library(moderndive)
+library(skimr)
+```
+
+# Set up 
+
+This section is to be done after you input your answer to total number of stars on the google sheet
+
+Do not continue until after you have taken what you think is a good simple random sample and recorded your answer in the google sheets file.
+
+
+Data load. This data set contains the count of stars in each of the 100 squares. 
+
+```{r}
+
+stars <- read_csv("/Users/Charley/Dropbox/Charley/Juniata/Data Science Masters/Statistics Fundamentals/stars.csv")
+View(stars)
+```
+
+Look at the data set and note the numbering of the rows and columns. The data set starts in the top left corner of the sheet.
+
+We can find the total number of stars in our sky, since we have the POPULATION. (Having the population is not realistic - but then, again, neither is this star sheet.)
+
+```{r}
+sum(stars$stars)
+
+
+```
+How close was your total based on your sampling? 
+
+
+This link is the samples we took for stars.
+```{r}
+ourstars<-read_csv("https://docs.google.com/spreadsheets/d/1Uuv6aTx8ZxyerR6c5d5Fx3avOV7PHuVWhkaHeRa70JQ/export?format=csv")
+ourstars
+```
+
+## Our samples
+```{r}
+
+ggplot(data=ourstars, mapping=aes(x=`TotalStars`))+
+  geom_histogram(bins=5)
+```
+
+# Simple random sampling
+
+First we explore the simple random sampling. The statistical inference that we do in this class expects simple random sampling (perhaps after we group by strata - explained later in activity.)
+
+
+We can take simple random samples of size 5 using R
+
+First we take one sample of size 5.
+
+## One sample size 5
+```{r}
+
+sample_5=rep_sample_n(stars,size=5, reps=1)#samples from each column
+sample_5 #show what has been sampled
+```
+
+Estimates of how many stars
+```{r}
+sample_5 %>% 
+ summarize(`number of stars estimate`=sum(stars)*20)
+```
+
+Now we take 10 samples of size 5. We denote the size 5 by saying n = 5. The number of repetitions does NOT have an abbreviation outside of reps.
+
+## 10 samples of size 5
+```{r}
+ten_samples_5=rep_sample_n(stars, size=5, reps=10) #reps says take 10 samples
+ten_samples_5
+```
+
+Note that the data is already grouped by replicate (first column in the above data table) by the routine or we'd have to do that first for the R code below.
+
+We can find the sum and multiply it by 20 for each of the 10 replicates.
+
+```{r}
+ten_samples_5_table<-ten_samples_5 %>% 
+  summarize(`numberofstarsestimate`=sum(stars)*20)
+ten_samples_5_table
+```
+
+
+Graph this set of 10 replicates
+
+```{r}
+ggplot(data=ten_samples_5_table, mapping=aes(x=`numberofstarsestimate`))+
+  geom_histogram(bins=5)
+```
+
+We've only taken a few of the very large number of samples of size 5. Here's how many samples of size 5 that exist in the data set of size 100. 
+
+```{r}
+100*99*98*97*96/(5*4*3*2*1)
+```
+
+Over 75 million!
+
+So we can't take all of them which would create the theoretical sampling distribution, but we can see what happens as the number of replicates increases.
+
+
+
+## 100 samples of size 5
+```{r}
+hundred_samples_5=rep_sample_n(stars, size=5, reps=100)
+hundred_samples_5
+```
+
+```{r}
+hundred_samples_5_table<- hundred_samples_5 %>% 
+  summarize(`numberofstarsestimate`=sum(stars)*20)
+hundred_samples_5_table
+```
+
+Describe the graph for 100 samples of size 5
+```{r}
+ggplot(data=hundred_samples_5_table, mapping=aes(x=`numberofstarsestimate`))+
+  geom_histogram(bins=5)
+```
+
+## 1000 samples of size 5
+```{r}
+thousand_samples_5=rep_sample_n(stars, size=5, reps=1000)
+thousand_samples_5
+```
+
+```{r}
+thousand_samples_5_table<-thousand_samples_5 %>% 
+  summarize(`numberofstarsestimate`=sum(stars)*20)
+thousand_samples_5_table
+```
+
+Compare the graph for 1000 samples of size 5 to the graph for 100 samples of size 5
+```{r}
+ggplot(data=thousand_samples_5_table, mapping=aes(x=`numberofstarsestimate`))+
+  geom_histogram(bins=5)
+mean(thousand_samples_5_table$numberofstarsestimate) #mean of sample means
+sd(thousand_samples_5_table$numberofstarsestimate)
+```
+
+Note that the graphs have approximately the same shape, center (which is very close to the actual total number of stars) and spread. Even if we increase the number of replicates of the same size sample, the shape, center and spread will be approximately the same.
+
+You explore the shape, center and spread of sampling distributions in the assignment. Be sure to understand HOW we obtain the simple random sample before going on to the next section.
+
+
+# Systematic sampling
+
+You have read the pdf section on systematic sampling prior to working through this section. If not, stop and do so!
+
+First choose a random number between 1 and 20
+
+```{r}
+set.seed(42)
+runif(1)->myrandomnumber # generates a random number from a uniform distribution between 0 and 1 and stores it in myrandomnumber
+
+#We convert that randomnumber to an integer between 1 and 20 using a standard mathematical technique and store it in the variable everykthsquare
+
+round(myrandomnumber*19,0)+1 -> everykthsquare  #converts the decimal number to an integer between one and 20
+```
+
+If everykthsquare was 1, we would choose squares  1, 21, 41, 61, and 81.
+
+We can find our everykthsquare.
+
+
+
+```{r}
+everykthsquare
+
+```
+Since our random number is 18, we will choose squares 18, 38, 58, 78, 98
+
+```{r}
+
+MySystematicSample <- rbind(stars[18,],stars[38,],stars[58,],stars[78,],stars[98,])
+MySystematicSample
+```
+
+
+Then using the first column choose everykthsquare. Note we will only ever have 20 different samples so we can look at ALL of those samples. This is a theoretical (because it is complete) sampling distribution for systematic sampling.
+
+
+Examine the csv file again to see the Systematic labeling included.
+
+
+
+This is equivalent to putting numbering each square in a systematic way 1-20 and then choosing all of the everykthsquare
+```{r}
+stars <- read_csv("stars.csv")
+head(stars)
+```
+
+```{r}
+stars %>% 
+  group_by(Systematic) %>% 
+  summarize(TotalForGroup=sum(stars)*20)->SystematicSample
+View(SystematicSample)
+```
+Look at the last column in the SystematicSample to see the total number of stars estimated by each of the systematic samples.
+
+Here's a graph of the theoretical sampling distribution for systematic sampling for size 5.
+
+```{r}
+ggplot(data=SystematicSample, mapping=aes(x=`TotalForGroup`))+
+  geom_histogram(bins=5)
+mean(SystematicSample$TotalForGroup) #note that this value IS the total number of stars!
+sd(SystematicSample$TotalForGroup)
+```
+
+# Stratified Sampling
+
+Do not continue until you have created a criteria for nebula vs. void. That is, determine what constitutes a nebula.
+
+We stratify into two groups, void and nebula.
+
+The void squares are one stratum; the nebula are another.
+
+There are many ways to make the decision to stratify. A good stratification will mean that every item belongs to exactly one group and the decision rule is something reasonable.  I decided to create a histogram of the number of stars in each square
+
+```{r}
+ggplot(data=stars, mapping=aes(x=`stars`))+
+  geom_histogram()
+```
+Stare at the histogram and star guide decide (almost arbitrarily) that more than 22 will be a nebula.
+
+This chunk filters my stars data set and creates two other data sets based on this criteria.
+```{r}
+stars %>% 
+  filter(stars<23)->void
+stars %>% 
+  filter(stars>22)->nebula
+head(nebula)
+head(void)
+```
+Using my decision rule, I can determine how many squares are void and how many are nebula:
+
+```{r}
+nrow(void)
+nrow(nebula)
+```
+If I take total sample of size 5, I should take that proportion 67/100 of my samples from the e void and the remaining 33/100 from the nebula
+
+```{r}
+67/100*5
+```
+Of course, that value is unlikely to be an integer, so I round it to 3.
+
+(You probably got around 3, too, regardless of your decision rule.)
+
+I now take a simple random sample from each of my strata. There is one replicate (reps=1). Note the size of each sample
+
+```{r}
+sample_void=rep_sample_n(void, size=3, reps=1)
+
+sample_nebula=rep_sample_n(nebula, size=2, reps=1)
+
+```
+We combine the two samples, one from each stratum, into a sample called final sample.
+
+```{r}
+rbind(sample_void,sample_nebula)->finalsample
+```
+Look at this final sample:
+
+```{r}
+finalsample
+```
+
+
+Now sum the stars and multiply the sum by 20 to find our estimate for this stratified sample.
+```{r}
+finalsample %>% 
+  summarize(totalsampledstars=sum(stars)*20)
+```
+Rerun the appropriate chunks above to find another estimate
+
+Now we will take 1000 simple random samples of size 3 from the void, 1000 simple random samples of size 2 from the nebula, combine those replicates.  
+```{r}
+sample_void=rep_sample_n(void, size=3, reps=1000)
+head(sample_void,10) # look at first 10 entries, note the replicate
+mysample1<-sample_void %>% 
+  summarize(`stratifiedsamplevoid`=sum(stars)*20) %>% ungroup()
+head(mysample1) #look at the summarized data for each of the 1000 replicates
+```
+Repeat the above with the nebula group
+
+```{r}
+sample_nebula=rep_sample_n(nebula, size=2, reps=1000)
+head(sample_nebula)
+mysample2<-sample_nebula %>% 
+  summarize(`stratifiedsamplenebula`=sum(stars)*20) %>% ungroup()
+head(mysample2)
+
+```
+And combine those data sets.
+
+```{r}
+inner_join(mysample1,mysample2,by='replicate')->finalsample
+head(finalsample)
+```
+
+Combining those totals by replicate we have the following:
+```{r}
+finalsample %>% 
+  mutate('totalstars'=stratifiedsamplevoid+stratifiedsamplenebula) %>% 
+  select('replicate','totalstars')->StratifiedSample
+head(StratifiedSample,10)
+```
+
+
+And graph that
+```{r}
+ggplot(data=StratifiedSample, mapping=aes(x=`totalstars`))+
+  geom_histogram(bins=5)
+mean(StratifiedSample$totalstars)
+sd(StratifiedSample$totalstars)
+```
+
+
+
+
+
+Recap
+1. larger the sample the smaller the variance of the sampling distribution of the sample means
+2. SRS had a HUGE number of possible samples, 75 million; Systematic had only 20; Stratified is smaller number of POSSIBLE (about 25 million)
+3. we take one sample
+4. we would like to have the smallest variance (we used standard deviation to measure variance) of the THEORETICAL sampling distribution
+5. We never have the theoretical sampling distribution - we can rely some of the theory.
+6. sampling distributions that do NOT require theory are useful - bootstrap sampling distributions do not require theoretical sampling distributions
+
+
+NOTE we have been talking about the sampling distribution of some statistic. We looked at total in this exercise but typically we look at the mean.

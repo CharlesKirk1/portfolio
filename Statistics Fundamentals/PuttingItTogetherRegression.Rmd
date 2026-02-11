@@ -1,0 +1,300 @@
+---
+title: "Putting it together Regression"
+author: "Charley Kirk"
+date: "9/30/2024"
+output:
+  word_document: default
+  pdf_document:
+    fig_height: 3
+    fig_width: 4
+---
+Based on examples found in *Statistical Sleuth* by Fred Ramsey
+
+
+# Background for first data set
+Evolutionary biologists are keenly interested in the characteristics that enable a species to withstand the selective mechanisms of evolution. An interesting variable in this respect is brain size. One might expect that bigger brains are better, but certain penalties seem to be associated with large brains, such as the need for longer pregnancies and fewer offspring. Although the individual members of the large-brained species may have more chance of surviving, the benefits
+for the species must be good enough to compensate for these penalties. To shed some light on this issue, it is helpful to determine exactly which characteristics are associated with large brains, after getting the effect of body size (controlling for body size) out of the way.
+
+## Setup
+
+First load the necessary packages. 
+
+```{r message = FALSE}
+library(tidyverse)
+library(moderndive)
+library(readr)
+```
+
+## Question 1 
+
+Write code to read in the file Brainsize.csv.
+```{r}
+bsize <- read_csv("~/Dropbox/Charley/Juniata/Data Science Masters/Statistics Fundamentals/Brainsize.csv")
+```
+
+## Question 2
+
+Explain each of the variables in the data set. You may assume that each value is the average for the species. Be sure to include the number of species in the data set. The units are missing.
+
+```{r}
+bsize
+```
+
+```{r}
+bsize%>%
+  glimpse()
+```
+There are 96 species in the dataset. "..1" and "Species" are identification variables for the species in the dataset. Brain and Body give the volume of the brain of a species and the volume of the body of a species respectively. For Brain the units are probably cubic centimeters while for Body the units might be liters or thousands of cubic centimeters, going off of the human observation. Gestation gives the length of a pregnancy in days. Litter gives the number of offspring produced through a single pregnancy.
+
+## Question 3 Exploratory data analysis
+
+
+Create a scatterplot to explore the relationship between brain size and body weight. Describe the scatterplot.
+
+```{r}
+bsize%>%
+  ggplot()+
+  geom_point(aes(Brain, Body))
+```
+
+The points on the scatterplot seem to reveal a moderate to strong positive linear relationship between brain size and body weight. There is one point that is at the top right corner of the graph and is especially far from the other points.
+
+## Question 4
+
+Since brain size is obviously related to body size the question of interest is this: Which, if any, variables are associated with brain size, after accounting for body size?
+
+## We account for body size by requiring it to be part of any regression model we create. 
+
+Create a model with just body size to explain brainsize. 
+
+
+```{r}
+brainbodymodel <- lm(Brain ~ Body, data = bsize)
+get_regression_table(brainbodymodel)
+```
+
+## Question 5
+
+### a. What is the equation of the model?
+
+Predicted Brain=1.33*(Body)+74.928
+
+### b. Interpret the slope.
+
+A slope of 1.33 here means that an increase in body size of one unit is associated with an increase in brain size of 1.33 units.
+
+## Question 6
+
+Find the R-squared value for this model and interpret it.
+
+```{r}
+brainbodymodel%>%
+get_regression_summaries()
+```
+
+An r-squared value of 0.744 tells us that our model explains about 74.4% of the variation in brain size.
+
+## Question 7
+We are told to evaluate litter and gestation on brain size after controlling for the body size. Every regression model we create should, therefore, include body size in it. (Controlling for body size means that if we KNOW the body size, we can determine how any additional variables might explain other changes to the brain size.)
+
+
+### a. Check the effect of average litter size.
+```{r}
+brainbodylittermodel<-lm(Brain ~ Body * Litter, data = bsize)
+get_regression_table(brainbodylittermodel)
+get_regression_points(brainbodylittermodel)
+```
+
+```{r}
+get_regression_points(brainbodylittermodel)%>%
+  mutate(new_bin = cut(Body, breaks=8))%>%
+  ggplot(aes(Litter, Brain))+
+  geom_point()+
+  facet_wrap(~new_bin)
+#  scale_x_continuous(limits = c(0,1000))+
+#  scale_y_continuous(limits = c(0,1000))
+```
+
+
+
+### b. Is the size of the litter an effective explanatory variable?
+
+The size of the litter is not an effective explanatory variable as the Body:Litter term has a small value of -0.001.
+
+
+### c. Check the effect of the average gestation. 
+
+
+```{r}
+brainbodygestationmodel<-lm(Brain ~ Body * Gestation, data = bsize)
+get_regression_table(brainbodygestationmodel)
+get_regression_points(brainbodygestationmodel)
+```
+
+```{r}
+breaks=quantile(bsize$Body, probs = seq(0, 1, 1/4))
+get_regression_points(brainbodygestationmodel)%>%
+  mutate(new_bin = cut(Body, breaks=breaks))%>%
+  ggplot(aes(Gestation, Brain))+
+  geom_point()+
+  facet_wrap(~new_bin)
+```
+
+
+### d. Is the gestation period an effective explanatory variable? 
+
+The gestation period is not an effective explanatory variable as the Body:Gestation term has a small value of 0.002.
+
+
+### e. Test to see if the interaction term is useful.
+
+
+Given the low value of the interaction term in these examples I would say it is not very useful at least in this situation.
+
+
+
+## Question 8 Conclusion
+
+*What is the model that you choose and why?*
+
+I chose an interaction model because I assumed it might better show if Simpson's Paradox might be occurring. 
+
+# Background for data set 2
+
+Meadowfoam (Limnanthes alba) is a small plant found growing in moist meadows. It has been domesticated at Oregon State Unviersity for its seed oil, which is unique among vegetable oils for its long carbon strings. 
+
+
+Researchers reported the results from one study in a series designed to find out how to elevate meadowfoam production to a profitable crop. In a controlled growth chamber, they focused on the effect of two light-related factors: light intensity, at the six levels of 150, 300, 450, 600, 750 and 900 mmol/m2/sec; and the timing of the onset of the light treatment, either at a photoperiodic floral induction (PFI) – the time at which the photo period was increased from 8 to 16 hours per day to induce flowering - or 24 days before PFI. 
+
+
+The design consists of 12 treatment groups – the six light intensities at each of the two timing levels. Ten seedlings were randomly assigned to each group. The number of flowers per plant is the primary measure of production, and it was measured by averaging the numbers of flowers produced by the 10 seedlings in each group.
+
+The entire experiment was replicated. We wish to determine the following:
+
+* What are the effects of differing light intensity levels?
+* What is the effect of the timing?
+* Does the effect of intensity depend on timing?
+
+## Question 9 
+
+Read in the data.
+
+```{r}
+mfoam <- read_csv("~/Dropbox/Charley/Juniata/Data Science Masters/Statistics Fundamentals/Meadowfoam.csv")
+```
+
+## Question 10
+Explain each of the variables in the data set and note the variable type (quantitative or categorical). 
+
+```{r}
+mfoam
+```
+
+"..1" is an identification variable and is categorical. Flowers is an average count of flowers so it is quantitative. Time refers to one of two time timings labeled Early and Late, so it is categorical. Intens is a quantitative variable that gives the light intensity.
+
+## Question 11
+
+We start by graphing Flowers versus each potential explanatory variable. 
+Noting that Time is a factor, create a boxplot to compare the response variable (quantitative) to the explanatory variable Time. 
+
+### a. Create the boxplot.
+```{r}
+mfoam%>%
+  ggplot()+
+  geom_boxplot(aes(Time, Flowers))
+```
+
+### b. Describe your graph. Remember shape can not be described when a boxplot is created. 
+
+It looks like the median number of flowers in the Early group is around 60, while the median for the Late group is around 50. The Early group has a larger IQR while the Late group has longer whiskers and a lower minimum.
+
+### c. Create a boxplot to compare the response variable (quantitative) to the explanatory variable Intensity.
+
+```{r}
+mfoam%>%
+  ggplot()+
+  geom_boxplot(aes(as.factor(Intens), Flowers))
+```
+
+### d.  Describe your graph.
+
+The boxplots trend further down the y-axis at increasing values of Intens, with the median of each boxplot being lower than the median of the boxplot before it. There's also a single low outlier at around 60 on the y-axis at an Intens value of 150.
+
+### e. Create a scatterplot of the flowers versus the light intensity.
+
+```{r}
+mfoam%>%
+  ggplot()+
+  geom_point(aes(Intens, Flowers))
+```
+
+### f. Describe your scatterplot.
+
+The scatterplot looks much like the last boxplot graph, with what appears to be a negative linear correlation.
+
+### g. Before we create a linear model and BECAUSE we have a categorical variable involved in the experiment, we will consider including the categorical variable in the scatterplot. Do so.
+
+```{r}
+mfoam%>%
+  ggplot()+
+  geom_point(aes(Intens, Flowers, color=Time))
+```
+
+## Question 12
+
+Is it feasible that there is an effect of both light intensity and time the light intensity starts? Explain your answer.
+
+Time and Intens do both have relationships with the Flowers variable. Plants in the Early group appear to produce more flowers on average at every intensity level while Flowers and Intens appear to have a negative linear correlation. That said it doesn not seem like the Time variable affects the relationship Intens has with Flowers as the Early group and the Late group seem to share similar negative linear correlations.
+
+## Question 13
+
+Should we consider an interaction effect?
+
+No, a parallel slopes model would be more appropriate.
+
+## Question 14
+Based on your answers above, create a linear model that explains the average number of flowers based on this experiment.
+
+```{r}
+flmodel <- lm(Flowers ~ Time+Intens, data = mfoam)
+get_regression_table(flmodel)
+```
+
+## Question 15
+
+
+Look at the residual plot for this model. How well does it match LINE?
+```{r}
+flmodel%>%
+  get_regression_points()%>%
+  ggplot(aes(Intens, residual, color=Time))+
+  geom_point()+
+  geom_hline(yintercept = 0, col = "blue")
+```
+
+It looks like the spread of residuals around the line y=0 is reasonably constant across the different values of Intens, so it seems likely that the equality of variance condition for LINE is met.
+
+## Question 16
+
+### a. Give the regression equation for the model when we have an early onset of the lighting.
+
+Predicted Flowers = -0.04*(Intens)+83.464.
+
+   
+### b. Give the regression equation for the model when we have an late onset of the lighting.
+
+Predicted Flowers = -0.04*(Intens)+83.464.
+   
+### c. Predict the average number of flowers when the timing is late onset and the intensity is 600.
+
+
+Predicted Flowers = -0.04*(Intens)+71.306.
+   
+   
+### d. One of our points was 62.9 flowers at an intensity of 600 and early onset timing. What is the residual for this point?
+
+```{r}
+62.9-(-0.04*(600)+83.464)
+```
+
+The residual for this point is 3.436.
